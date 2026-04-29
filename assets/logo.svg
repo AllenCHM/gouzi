@@ -1,50 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
-  <defs>
-    <linearGradient id="brand-bg" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#fffaf2" />
-      <stop offset="100%" stop-color="#f1e3c8" />
-    </linearGradient>
-    <linearGradient id="brand-ink" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#27272a" />
-      <stop offset="100%" stop-color="#111827" />
-    </linearGradient>
-    <linearGradient id="brand-accent" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#60a5fa" />
-      <stop offset="100%" stop-color="#2563eb" />
-    </linearGradient>
-  </defs>
-
-  <!-- 背景：铺满整个画布，圆角 22.37%（macOS squircle 标准） -->
-  <rect x="0" y="0" width="1024" height="1024" rx="229" fill="url(#brand-bg)" />
-
-  <!-- 账本组：放大、居中。原 96 viewBox 的 (16,21)-(80,68) 主体映射到画布约 (112,218)-(912,806) -->
-  <g transform="translate(-88, -44) scale(12.5)">
-    <!-- 打开的书本外形 -->
-    <path
-      d="M48 23c-10 0-18 3.2-22 6.8v38.5c4.7-3.9 12.1-6.1 22-6.1s17.3 2.2 22 6.1V29.8C66 26.2 58 23 48 23Z"
-      fill="#fffefb"
-      stroke="url(#brand-ink)"
-      stroke-width="2.6"
-      stroke-linejoin="round"
-    />
-    <!-- 中缝 -->
-    <path d="M48 23v45" stroke="url(#brand-ink)" stroke-width="2.6" stroke-linecap="round" />
-    <!-- 左页账目横线 -->
-    <path d="M32 37h10" stroke="#dcc9a4" stroke-width="2.6" stroke-linecap="round" />
-    <path d="M32 46h9"  stroke="#dcc9a4" stroke-width="2.6" stroke-linecap="round" />
-    <path d="M32 55h12" stroke="#dcc9a4" stroke-width="2.6" stroke-linecap="round" />
-    <!-- 右页折线图 -->
-    <path
-      d="M55 56l6-8 7 4 7-13"
-      fill="none"
-      stroke="url(#brand-accent)"
-      stroke-width="3.4"
-      stroke-linecap="round"
-      stroke-linejoin="round"
-    />
-    <!-- 折线终点高亮 -->
-    <circle cx="75" cy="39" r="5.2" fill="url(#brand-accent)" />
-    <!-- 右下装饰弧 -->
-    <path d="M58 66c5 2 11 2 16 0" fill="none" stroke="#dcc9a4" stroke-width="2.6" stroke-linecap="round" />
-  </g>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+  <rect width="200" height="200" fill="#F5EDE0" rx="44"></rect>
+  <ellipse cx="62" cy="78" rx="22" ry="32" fill="#8B5E3C" transform="rotate(-15 62 78)"></ellipse>
+  <ellipse cx="138" cy="78" rx="22" ry="32" fill="#8B5E3C" transform="rotate(15 138 78)"></ellipse>
+  <circle cx="100" cy="110" r="52" fill="#D4B896"></circle>
+  <ellipse cx="64" cy="82" rx="10" ry="18" fill="#3D2817" transform="rotate(-15 64 82)" opacity="0.4"></ellipse>
+  <ellipse cx="136" cy="82" rx="10" ry="18" fill="#3D2817" transform="rotate(15 136 82)" opacity="0.4"></ellipse>
+  <path d="M 78 105 Q 84 99 90 105" stroke="#3D2817" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+    <path d="M 110 105 Q 116 99 122 105" stroke="#3D2817" stroke-width="3.5" fill="none" stroke-linecap="round"></path>
+  <ellipse cx="100" cy="124" rx="6" ry="4.5" fill="#3D2817"></ellipse>
+  <path d="M 100 128 Q 100 138 92 138" stroke="#3D2817" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
+  <path d="M 100 128 Q 100 138 108 138" stroke="#3D2817" stroke-width="2.5" fill="none" stroke-linecap="round"></path>
 </svg>
