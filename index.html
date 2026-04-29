@@ -1353,66 +1353,8 @@ footer{
       <aside class="contact-card">
         <h3>有想说的?加我聊聊。</h3>
         <p class="lead">bug 反馈、功能建议,或者就是想聊聊产品 — 都可以扫码加我微信。</p>
-        <!--
-          ╭──────────────────────────────────────────────────────╮
-          │ 替换微信二维码:                                              │
-          │ 把你的二维码图片命名为 wechat-qr.png 放到 goubi/assets/ 目录, │
-          │ 然后把下面整个 <svg>...</svg> 块替换成:                        │
-          │   <img src="assets/wechat-qr.png" alt="作者微信二维码">       │
-          ╰──────────────────────────────────────────────────────╯
-        -->
         <div class="qr-box">
-          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="二维码占位">
-            <rect width="100" height="100" fill="#fff"/>
-            <g fill="#2B2A26">
-              <rect x="6" y="6" width="22" height="22"/>
-              <rect x="72" y="6" width="22" height="22"/>
-              <rect x="6" y="72" width="22" height="22"/>
-            </g>
-            <g fill="#fff">
-              <rect x="10" y="10" width="14" height="14"/>
-              <rect x="76" y="10" width="14" height="14"/>
-              <rect x="10" y="76" width="14" height="14"/>
-            </g>
-            <g fill="#2B2A26">
-              <rect x="14" y="14" width="6" height="6"/>
-              <rect x="80" y="14" width="6" height="6"/>
-              <rect x="14" y="80" width="6" height="6"/>
-              <rect x="34" y="6" width="4" height="4"/>
-              <rect x="42" y="10" width="4" height="4"/>
-              <rect x="50" y="6" width="4" height="4"/>
-              <rect x="58" y="14" width="4" height="4"/>
-              <rect x="34" y="18" width="4" height="4"/>
-              <rect x="46" y="22" width="4" height="4"/>
-              <rect x="62" y="18" width="4" height="4"/>
-              <rect x="6" y="34" width="4" height="4"/>
-              <rect x="14" y="42" width="4" height="4"/>
-              <rect x="22" y="34" width="4" height="4"/>
-              <rect x="6" y="50" width="4" height="4"/>
-              <rect x="18" y="58" width="4" height="4"/>
-              <rect x="34" y="34" width="4" height="4"/>
-              <rect x="42" y="38" width="4" height="4"/>
-              <rect x="38" y="46" width="4" height="4"/>
-              <rect x="50" y="34" width="4" height="4"/>
-              <rect x="58" y="42" width="4" height="4"/>
-              <rect x="62" y="34" width="4" height="4"/>
-              <rect x="34" y="50" width="4" height="4"/>
-              <rect x="46" y="54" width="4" height="4"/>
-              <rect x="50" y="62" width="4" height="4"/>
-              <rect x="58" y="58" width="4" height="4"/>
-              <rect x="62" y="50" width="4" height="4"/>
-              <rect x="74" y="34" width="4" height="4"/>
-              <rect x="86" y="42" width="4" height="4"/>
-              <rect x="78" y="50" width="4" height="4"/>
-              <rect x="90" y="58" width="4" height="4"/>
-              <rect x="34" y="74" width="4" height="4"/>
-              <rect x="42" y="78" width="4" height="4"/>
-              <rect x="58" y="74" width="4" height="4"/>
-              <rect x="62" y="86" width="4" height="4"/>
-              <rect x="50" y="90" width="4" height="4"/>
-            </g>
-            <text x="50" y="56" text-anchor="middle" font-size="6" fill="#C97D5D" font-family="system-ui" font-weight="600">占位</text>
-          </svg>
+        <img src="assets/wechat-qr.png" alt="作者微信二维码" class="qr-image">
         </div>
         <p class="contact-foot">
           也可以发邮件:<br>
