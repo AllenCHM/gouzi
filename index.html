@@ -173,7 +173,7 @@ img{max-width:100%;display:block}
 #origin{padding:40px 0 60px;position:relative}
 .origin-layout{
   display:grid;
-  grid-template-columns:minmax(0, 1fr) 320px;
+  grid-template-columns:minmax(0, 1fr) 300px;
   gap:60px;
   align-items:center;
   max-width:1180px;
@@ -192,38 +192,9 @@ img{max-width:100%;display:block}
   background-position:0 24px;
   background-repeat:repeat-y;
 }
-.origin-mark{
-  position:relative;
-  width:320px;height:320px;
-  justify-self:center;
-}
-.origin-mark__halo{
-  width:100%;height:100%;
-  border-radius:50%;
-  background:radial-gradient(circle at 35% 30%, #F5EDE0 0%, #E8D9C0 100%);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 30px 60px rgba(139,94,60,0.12), inset 0 0 0 1px rgba(184,137,92,0.12);
-}
-.origin-mark__logo{
-  width:62%;height:62%;
-  filter:drop-shadow(0 4px 8px rgba(61,40,23,0.12));
-}
-.origin-mark__star{
-  position:absolute;
-  color:var(--orange);
-  pointer-events:none;
-  filter:drop-shadow(0 2px 4px rgba(201,125,93,0.25));
-}
-.origin-mark__star--1{top:-12px;right:24px;width:30px;height:30px}
-.origin-mark__star--2{top:80px;right:-26px;width:18px;height:18px;opacity:0.8}
-.origin-mark__star--3{bottom:30px;left:-16px;width:22px;height:22px;opacity:0.7}
-.origin-mark__star--4{bottom:-10px;right:60px;width:16px;height:16px;opacity:0.6}
 @media(max-width:980px){
   .origin-layout{grid-template-columns:1fr;gap:36px}
   .origin-card{justify-self:center}
-  .origin-mark{width:200px;height:200px;order:-1}
-  .origin-mark__star--1{width:22px;height:22px}
-  .origin-mark__star--2,.origin-mark__star--3,.origin-mark__star--4{width:14px;height:14px}
 }
 .origin-card::before{
   content:"";position:absolute;top:-13px;left:50%;
@@ -714,10 +685,10 @@ section{padding:80px 0}
 .manifesto-layout{
   margin-top:52px;
   display:grid;
-  grid-template-columns:minmax(0, 1fr) 240px;
-  gap:48px;
+  grid-template-columns:minmax(0, 1fr) 300px;
+  gap:60px;
   align-items:center;
-  max-width:1100px;
+  max-width:1180px;
   margin-left:auto;margin-right:auto;
 }
 .manifesto{
@@ -775,41 +746,49 @@ section{padding:80px 0}
   .manifesto-quote{font-size:21px;line-height:1.5}
 }
 
-/* === 通用卡片旁 logo 装饰（origin/manifesto/download 复用） === */
-.card-mark{
+/* === 狗子徽章（origin / manifesto / download 共用） === */
+.badge{
   position:relative;
   width:280px;height:280px;
   justify-self:center;
+  color:var(--orange);
+  transform:rotate(3deg);
 }
-.card-mark--small{
-  width:240px;height:240px;
-}
-.card-mark__halo{
+.badge--manifesto{transform:rotate(-2deg)}
+.badge--download{transform:rotate(4deg)}
+.badge__rim{
+  position:absolute;inset:0;
   width:100%;height:100%;
-  border-radius:50%;
-  background:radial-gradient(circle at 35% 30%, #F5EDE0 0%, #E8D9C0 100%);
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 30px 60px rgba(139,94,60,0.12), inset 0 0 0 1px rgba(184,137,92,0.12);
+  overflow:visible;
 }
-.card-mark__logo{
-  width:62%;height:62%;
-  filter:drop-shadow(0 4px 8px rgba(61,40,23,0.12));
+.badge__text{
+  fill:var(--orange);
+  font-family:'SF Mono','Menlo','Source Han Sans SC',sans-serif;
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:5.5px;
+  text-transform:uppercase;
 }
-.card-mark__star{
+.badge__logo{
+  position:absolute;
+  width:55%;height:55%;
+  top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  filter:drop-shadow(0 6px 14px rgba(61,40,23,0.18));
+}
+.badge__star{
   position:absolute;
   color:var(--orange);
   pointer-events:none;
   filter:drop-shadow(0 2px 4px rgba(201,125,93,0.25));
 }
-.card-mark__star--1{top:-12px;right:24px;width:26px;height:26px}
-.card-mark__star--2{top:60px;right:-22px;width:16px;height:16px;opacity:0.8}
-.card-mark__star--3{bottom:24px;left:-14px;width:20px;height:20px;opacity:0.7}
-.card-mark__star--4{bottom:-8px;right:50px;width:14px;height:14px;opacity:0.6}
+.badge__star--1{top:-18px;right:-12px;width:24px;height:24px}
+.badge__star--2{bottom:-4px;left:-18px;width:16px;height:16px;opacity:0.7}
 @media(max-width:980px){
-  .card-mark{width:180px;height:180px;order:-1}
-  .card-mark--small{width:160px;height:160px}
-  .card-mark__star--1{width:18px;height:18px}
-  .card-mark__star--2,.card-mark__star--3,.card-mark__star--4{width:12px;height:12px}
+  .badge{width:200px;height:200px;order:-1}
+  .badge__text{font-size:9px;letter-spacing:4px}
+  .badge__star--1{width:18px;height:18px}
+  .badge__star--2{width:13px;height:13px}
 }
 
 /* === 下载 === */
@@ -819,7 +798,7 @@ section{padding:80px 0}
 }
 .download-layout{
   display:grid;
-  grid-template-columns:minmax(0, 1fr) 280px;
+  grid-template-columns:minmax(0, 1fr) 300px;
   gap:60px;
   align-items:center;
   max-width:1180px;
@@ -1043,14 +1022,18 @@ footer{
       <p>于是,有了「狗子」。</p>
       <p class="origin-sign">— 写给那些想认真生活、却又不太自律的人</p>
     </article>
-    <aside class="origin-mark" aria-hidden="true">
-      <div class="origin-mark__halo">
-        <img src="assets/logo.svg" alt="" class="origin-mark__logo">
-      </div>
-      <svg class="origin-mark__star origin-mark__star--1" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-      <svg class="origin-mark__star origin-mark__star--2" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-      <svg class="origin-mark__star origin-mark__star--3" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-      <svg class="origin-mark__star origin-mark__star--4" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+    <aside class="badge badge--origin" aria-hidden="true">
+      <svg class="badge__rim" viewBox="0 0 280 280">
+        <defs>
+          <path id="badge-rim-origin" d="M 22 140 a 118 118 0 1 1 236 0 a 118 118 0 1 1 -236 0"/>
+        </defs>
+        <circle cx="140" cy="140" r="138" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5" opacity="0.35"/>
+        <circle cx="140" cy="140" r="98" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 4" opacity="0.3"/>
+        <text class="badge__text"><textPath href="#badge-rim-origin" startOffset="0">SINCE 2026 · A LIFE LIST · 人生清单 · SINCE 2026 · A LIFE LIST · 人生清单 · </textPath></text>
+      </svg>
+      <img src="assets/logo.svg" alt="" class="badge__logo">
+      <svg class="badge__star badge__star--1" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+      <svg class="badge__star badge__star--2" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
     </aside>
   </div>
 </section>
@@ -1413,13 +1396,18 @@ footer{
           狗子不替你"保管",既不能,也不想。
         </p>
       </div>
-      <aside class="card-mark card-mark--small" aria-hidden="true">
-        <div class="card-mark__halo">
-          <img src="assets/logo.svg" alt="" class="card-mark__logo">
-        </div>
-        <svg class="card-mark__star card-mark__star--1" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-        <svg class="card-mark__star card-mark__star--2" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-        <svg class="card-mark__star card-mark__star--3" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+      <aside class="badge badge--manifesto" aria-hidden="true">
+        <svg class="badge__rim" viewBox="0 0 280 280">
+          <defs>
+            <path id="badge-rim-manifesto" d="M 22 140 a 118 118 0 1 1 236 0 a 118 118 0 1 1 -236 0"/>
+          </defs>
+          <circle cx="140" cy="140" r="138" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5" opacity="0.35"/>
+          <circle cx="140" cy="140" r="98" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 4" opacity="0.3"/>
+          <text class="badge__text"><textPath href="#badge-rim-manifesto" startOffset="0">YOUR DATA · YOUR HOUSE · 数据主权 · YOUR DATA · YOUR HOUSE · 数据主权 · </textPath></text>
+        </svg>
+        <img src="assets/logo.svg" alt="" class="badge__logo">
+        <svg class="badge__star badge__star--1" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+        <svg class="badge__star badge__star--2" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
       </aside>
     </div>
   </div>
@@ -1438,14 +1426,18 @@ footer{
         · Intel / Windows / Linux 版尚在路上
       </div>
     </div>
-    <aside class="card-mark" aria-hidden="true">
-      <div class="card-mark__halo">
-        <img src="assets/logo.svg" alt="" class="card-mark__logo">
-      </div>
-      <svg class="card-mark__star card-mark__star--1" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-      <svg class="card-mark__star card-mark__star--2" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-      <svg class="card-mark__star card-mark__star--3" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-      <svg class="card-mark__star card-mark__star--4" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+    <aside class="badge badge--download" aria-hidden="true">
+      <svg class="badge__rim" viewBox="0 0 280 280">
+        <defs>
+          <path id="badge-rim-download" d="M 22 140 a 118 118 0 1 1 236 0 a 118 118 0 1 1 -236 0"/>
+        </defs>
+        <circle cx="140" cy="140" r="138" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5" opacity="0.35"/>
+        <circle cx="140" cy="140" r="98" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 4" opacity="0.3"/>
+        <text class="badge__text"><textPath href="#badge-rim-download" startOffset="0">v1.0.1 · BUILT WITH CARE · 用心打磨 · v1.0.1 · BUILT WITH CARE · 用心打磨 · </textPath></text>
+      </svg>
+      <img src="assets/logo.svg" alt="" class="badge__logo">
+      <svg class="badge__star badge__star--1" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+      <svg class="badge__star badge__star--2" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
     </aside>
   </div>
 </section>
