@@ -1,0 +1,1461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>狗子 · 让正确的行为变得极其容易</title>
+<meta name="description" content="狗子,最早叫"人生清单"。一个 AI Native 的桌面应用 — 你跟 AI 说一句"刚花了 35 块吃午饭",它就帮你记好了。数据本地加密,Mac 原生。">
+<meta property="og:title" content="狗子 · 一个 AI Native 的人生管理桌面应用">
+<meta property="og:description" content="它最早叫"人生清单"。默认你身边有 AI 助手 — 你说话,狗子默默记下来。写给那些不想再虚度时光的人。">
+<meta property="og:type" content="website">
+<link rel="icon" type="image/svg+xml" href="assets/logo.svg">
+<link rel="apple-touch-icon" href="assets/logo.svg">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1.7.0/style.css">
+<style>
+:root{
+  --paper:#FAF6E8;
+  --paper-deep:#F2E9CF;
+  --paper-edge:#E8DDB8;
+  --ink:#2B2A26;
+  --ink-soft:#5C564B;
+  --ink-faint:#8E867A;
+  --blue:#3F73A6;
+  --blue-deep:#2C547A;
+  --orange:#C97D5D;
+  --green:#6E9C5A;
+  --red:#C25450;
+  --yellow:#F4D35E;
+  --tape:rgba(244,211,94,0.55);
+  --line:#D7CAA6;
+  --shadow:0 6px 18px rgba(60,45,15,0.08), 0 2px 4px rgba(60,45,15,0.06);
+  --shadow-deep:0 14px 32px rgba(60,45,15,0.14), 0 4px 8px rgba(60,45,15,0.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-font-smoothing:antialiased}
+body{
+  font-family:"LXGW WenKai","霞鹜文楷","PingFang SC","Hiragino Sans GB",system-ui,sans-serif;
+  background:var(--paper);
+  color:var(--ink);
+  line-height:1.75;
+  font-size:16px;
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(244,211,94,0.18) 0%, transparent 38%),
+    radial-gradient(circle at 88% 72%, rgba(63,115,166,0.10) 0%, transparent 42%),
+    radial-gradient(circle at 50% 100%, rgba(201,125,93,0.10) 0%, transparent 50%);
+  min-height:100vh;
+  position:relative;
+  overflow-x:hidden;
+}
+body::before{
+  content:"";
+  position:fixed;inset:0;
+  pointer-events:none;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' seed='5'/><feColorMatrix values='0 0 0 0 0.3 0 0 0 0 0.25 0 0 0 0 0.15 0 0 0 0.6 0'/></filter><rect width='100%' height='100%' filter='url(%23n)' opacity='0.18'/></svg>");
+  opacity:.35;
+  z-index:0;
+  mix-blend-mode:multiply;
+}
+main, header, footer{position:relative;z-index:1}
+a{color:var(--blue);text-decoration:none}
+a:hover{color:var(--blue-deep)}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+img{max-width:100%;display:block}
+
+/* === 顶栏 === */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:rgba(250,246,232,0.85);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+  border-bottom:1px dashed var(--line);
+}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:20px;color:var(--ink)}
+.brand-mark{
+  width:34px;height:34px;border-radius:8px;
+  display:block;
+  box-shadow:0 2px 4px rgba(60,45,15,0.12);
+}
+.nav-links{display:flex;gap:28px;align-items:center}
+.nav-links a{color:var(--ink-soft);font-size:15px}
+.nav-links a:hover{color:var(--blue-deep)}
+.nav-cta{
+  background:var(--blue);color:#fff !important;
+  padding:8px 16px;border-radius:8px;font-size:14px;
+  box-shadow:0 2px 0 var(--blue-deep);
+  transition:transform .1s ease;
+}
+.nav-cta:hover{transform:translateY(-1px);color:#fff !important}
+.nav-cta:active{transform:translateY(1px);box-shadow:0 0 0 var(--blue-deep)}
+@media(max-width:680px){.nav-links a:not(.nav-cta){display:none}}
+
+/* === Hero === */
+.hero{padding:80px 0 60px;position:relative}
+.hero-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center}
+@media(max-width:880px){.hero-grid{grid-template-columns:1fr;gap:40px}}
+.eyebrow{
+  display:inline-block;font-size:14px;color:var(--orange);
+  background:rgba(201,125,93,0.10);
+  padding:4px 12px;border-radius:999px;
+  border:1px dashed rgba(201,125,93,0.4);
+  margin-bottom:18px;
+}
+.hero h1{
+  font-size:54px;line-height:1.25;font-weight:700;
+  letter-spacing:0.5px;margin-bottom:18px;
+}
+.hero h1 .hl{
+  background:linear-gradient(180deg,transparent 60%,var(--yellow) 60%,var(--yellow) 90%,transparent 90%);
+  padding:0 4px;
+}
+@media(max-width:680px){.hero h1{font-size:38px}}
+.hero-sub{font-size:18px;color:var(--ink-soft);margin-bottom:14px;max-width:500px}
+.hero-quote{
+  font-size:15px;color:var(--ink-faint);font-style:italic;
+  border-left:3px solid var(--orange);
+  padding:6px 0 6px 14px;margin:18px 0 32px;
+  max-width:480px;
+}
+.cta-row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:14px 24px;border-radius:10px;
+  font-size:16px;font-weight:600;
+  font-family:inherit;cursor:pointer;
+  transition:transform .12s ease, box-shadow .12s ease;
+  border:none;
+}
+.btn-primary{
+  background:var(--blue);color:#fff;
+  box-shadow:0 4px 0 var(--blue-deep), 0 6px 14px rgba(63,115,166,0.25);
+}
+.btn-primary:hover{transform:translateY(-1px);color:#fff;box-shadow:0 5px 0 var(--blue-deep), 0 8px 18px rgba(63,115,166,0.32)}
+.btn-primary:active{transform:translateY(2px);box-shadow:0 2px 0 var(--blue-deep)}
+.btn-ghost{
+  background:transparent;color:var(--ink);
+  border:1.5px solid var(--ink);
+  padding:12.5px 22px;
+}
+.btn-ghost:hover{background:var(--ink);color:var(--paper)}
+.hero-meta{
+  display:flex;gap:22px;flex-wrap:wrap;
+  margin-top:22px;font-size:13px;color:var(--ink-faint);
+}
+.hero-meta span{display:inline-flex;align-items:center;gap:6px}
+.dot{width:6px;height:6px;border-radius:50%;background:var(--green);display:inline-block}
+
+/* === Hero 截图占位(便签贴纸) === */
+.screenshot-card{
+  position:relative;
+  background:#fff;
+  border-radius:14px;
+  padding:14px;
+  box-shadow:var(--shadow-deep);
+  transform:rotate(1.2deg);
+  transition:transform .3s ease;
+}
+.screenshot-card:hover{transform:rotate(0)}
+.screenshot-card::before{
+  content:"";position:absolute;top:-14px;left:50%;
+  transform:translateX(-50%) rotate(-2deg);
+  width:120px;height:26px;
+  background:var(--tape);
+  border:1px dashed rgba(0,0,0,0.08);
+  border-radius:2px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.05);
+}
+.shot-img{
+  width:100%;height:auto;border-radius:8px;display:block;
+  background:#FAF6E8;
+}
+
+/* === 缘起 信纸 === */
+#origin{padding:40px 0 60px;position:relative}
+.origin-card{
+  max-width:760px;margin:0 auto;
+  background:#FFFCF2;
+  border:1px solid var(--paper-edge);
+  border-radius:16px;
+  padding:54px 60px 46px;
+  position:relative;
+  box-shadow:var(--shadow-deep);
+  transform:rotate(-0.5deg);
+  background-image:linear-gradient(transparent 35px, rgba(63,115,166,0.06) 36px);
+  background-size:100% 36px;
+  background-position:0 24px;
+  background-repeat:repeat-y;
+}
+.origin-card::before{
+  content:"";position:absolute;top:-13px;left:50%;
+  transform:translateX(-50%) rotate(-2.5deg);
+  width:110px;height:24px;
+  background:var(--tape);
+  border:1px dashed rgba(0,0,0,0.08);
+  border-radius:2px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.05);
+}
+.origin-card::after{
+  content:"";position:absolute;left:46px;top:24px;bottom:24px;width:1px;
+  background:rgba(201,125,93,0.25);
+  pointer-events:none;
+}
+.origin-tag{
+  display:inline-block;
+  font-size:13px;color:var(--orange);
+  background:rgba(201,125,93,0.08);
+  border:1px dashed rgba(201,125,93,0.4);
+  padding:4px 14px;border-radius:999px;
+  margin-bottom:24px;
+  letter-spacing:0.5px;
+}
+.origin-card p{
+  font-size:17px;line-height:36px;
+  color:var(--ink);margin-bottom:0;
+  position:relative;z-index:1;
+}
+.origin-card p + p{margin-top:8px}
+.origin-card .lead{font-size:19px;font-weight:600}
+.origin-card .turn{color:var(--blue-deep);font-weight:600}
+.origin-sign{
+  margin-top:20px !important;
+  font-size:14.5px !important;color:var(--ink-faint) !important;
+  font-style:italic;text-align:right;
+  border-top:1px dashed var(--line);
+  padding-top:18px;
+}
+@media(max-width:680px){
+  .origin-card{padding:40px 28px 32px;border-radius:12px;transform:none}
+  .origin-card::after{left:22px}
+  .origin-card p{font-size:16px;line-height:32px}
+  .origin-card .lead{font-size:17px}
+}
+
+/* === 通用区块 === */
+section{padding:80px 0}
+.section-head{text-align:center;margin-bottom:56px}
+.section-eyebrow{
+  display:inline-block;font-size:13px;letter-spacing:2px;
+  color:var(--blue);text-transform:uppercase;margin-bottom:10px;
+}
+.section-head h2{font-size:38px;line-height:1.3;margin-bottom:14px}
+.section-head p{font-size:17px;color:var(--ink-soft);max-width:620px;margin:0 auto}
+
+/* === 痛点 === */
+.pain-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  gap:24px;
+}
+.pain-card{
+  background:#FFFCF2;
+  border:1px solid var(--paper-edge);
+  border-radius:14px;
+  padding:24px 22px;
+  position:relative;
+  transition:transform .25s ease, box-shadow .25s ease;
+  box-shadow:var(--shadow);
+}
+.pain-card:nth-child(odd){transform:rotate(-0.6deg)}
+.pain-card:nth-child(even){transform:rotate(0.6deg)}
+.pain-card:hover{transform:rotate(0) translateY(-4px);box-shadow:var(--shadow-deep)}
+.pain-icon{font-size:28px;margin-bottom:10px;display:block}
+.pain-card h3{font-size:18px;margin-bottom:8px;color:var(--ink)}
+.pain-card p{font-size:14.5px;color:var(--ink-soft);line-height:1.7}
+.pain-card .arrow{
+  margin-top:14px;padding-top:14px;
+  border-top:1px dashed var(--line);
+  font-size:13.5px;color:var(--blue-deep);
+  line-height:1.7;
+}
+.pain-card .pain-label{
+  display:inline-block;
+  font-size:11.5px;font-weight:700;letter-spacing:1.5px;
+  color:var(--orange);
+  background:rgba(201,125,93,0.08);
+  border:1px dashed rgba(201,125,93,0.35);
+  padding:3px 10px;border-radius:999px;
+  margin-bottom:18px;
+}
+.pain-card .pain-quote{
+  position:relative;
+  font-size:17px;line-height:1.65;
+  color:var(--ink);font-weight:700;
+  padding-left:22px;
+  margin-bottom:0;
+  letter-spacing:0.3px;
+}
+.pain-card .pain-quote::before{
+  content:"\201C";
+  position:absolute;left:-2px;top:-12px;
+  font-size:42px;
+  color:var(--orange);
+  opacity:0.5;
+  font-family:Georgia, "SF Pro", serif;
+  line-height:1;
+  font-weight:700;
+}
+.pain-card:nth-child(3n+2) .pain-label{
+  color:var(--blue-deep);
+  background:rgba(63,115,166,0.10);
+  border-color:rgba(63,115,166,0.30);
+}
+.pain-card:nth-child(3n+2) .pain-quote::before{color:var(--blue)}
+.pain-card:nth-child(3n) .pain-label{
+  color:#4a6b3a;
+  background:rgba(110,156,90,0.10);
+  border-color:rgba(110,156,90,0.30);
+}
+.pain-card:nth-child(3n) .pain-quote::before{color:var(--green)}
+
+/* === 功能 === */
+.feature-section{background:linear-gradient(180deg, transparent 0%, rgba(232,221,184,0.25) 50%, transparent 100%)}
+.feature-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+  gap:22px;
+}
+.feature-card{
+  background:#FFFCF2;
+  border:1px solid var(--paper-edge);
+  border-radius:14px;
+  padding:26px 24px;
+  position:relative;
+  box-shadow:var(--shadow);
+  transition:transform .25s ease, box-shadow .25s ease;
+}
+.feature-card:hover{transform:translateY(-4px);box-shadow:var(--shadow-deep)}
+.feature-num{
+  position:absolute;top:-12px;left:20px;
+  width:30px;height:30px;border-radius:50%;
+  background:var(--blue);color:#fff;
+  display:grid;place-items:center;
+  font-size:14px;font-weight:700;
+  box-shadow:0 2px 0 var(--blue-deep);
+}
+.feature-card h3{font-size:19px;margin:6px 0 10px}
+.feature-card p{font-size:14.5px;color:var(--ink-soft);line-height:1.75}
+.feature-card .tag{
+  display:inline-block;font-size:12px;
+  background:rgba(63,115,166,0.10);color:var(--blue-deep);
+  padding:2px 10px;border-radius:999px;
+  margin-top:14px;
+}
+.feature-card.warm .feature-num{background:var(--orange);box-shadow:0 2px 0 #9b5f43}
+.feature-card.warm .tag{background:rgba(201,125,93,0.12);color:var(--orange)}
+.feature-card.green .feature-num{background:var(--green);box-shadow:0 2px 0 #547242}
+.feature-card.green .tag{background:rgba(110,156,90,0.12);color:var(--green)}
+
+/* === Phase 叙事链路 === */
+.phase{margin-bottom:64px;position:relative}
+.phase:last-child{margin-bottom:0}
+.phase-head{
+  display:flex;align-items:flex-start;gap:20px;
+  margin:0 auto 30px;max-width:780px;
+}
+.phase-num{
+  flex-shrink:0;
+  font-family:"SF Mono","Menlo",monospace;
+  font-size:44px;font-weight:800;
+  color:var(--orange);
+  line-height:1;letter-spacing:-2px;
+  opacity:0.85;
+}
+.phase-head > .phase-text{flex:1}
+.phase-head h3{
+  font-size:26px;font-weight:700;color:var(--ink);
+  margin-bottom:6px;line-height:1.35;
+}
+.phase-head h3 .turn{
+  background:linear-gradient(180deg,transparent 60%,var(--yellow) 60%,var(--yellow) 90%,transparent 90%);
+  padding:0 4px;
+}
+.phase-head p{font-size:15.5px;color:var(--ink-soft);line-height:1.7}
+.step-row{
+  display:grid;
+  grid-template-columns:1fr 22px 1fr 22px 1fr 22px 1fr;
+  gap:0;align-items:stretch;
+}
+.step-card{
+  background:#FFFCF2;
+  border:1px solid var(--paper-edge);
+  border-radius:12px;
+  padding:18px 18px 18px;
+  position:relative;
+  box-shadow:var(--shadow);
+  transition:transform .25s ease, box-shadow .25s ease;
+  display:flex;flex-direction:column;gap:10px;
+}
+.step-row .step-card:nth-of-type(1){transform:rotate(-0.5deg)}
+.step-row .step-card:nth-of-type(2){transform:rotate(0.4deg)}
+.step-row .step-card:nth-of-type(3){transform:rotate(-0.3deg)}
+.step-row .step-card:nth-of-type(4){transform:rotate(0.5deg)}
+.step-card:hover{transform:rotate(0) translateY(-4px) !important;box-shadow:var(--shadow-deep)}
+.step-tag{
+  display:inline-flex;align-items:center;
+  font-size:13px;font-weight:600;
+  color:var(--blue-deep);
+  background:rgba(63,115,166,0.10);
+  padding:4px 12px;border-radius:999px;
+  align-self:flex-start;
+  border:1px dashed rgba(63,115,166,0.28);
+}
+.phase.warm .step-tag{
+  color:#9b5f43;
+  background:rgba(201,125,93,0.10);
+  border-color:rgba(201,125,93,0.32);
+}
+.phase.warm .phase-num{color:var(--orange)}
+.phase.green .step-tag{
+  color:#4a6b3a;
+  background:rgba(110,156,90,0.10);
+  border-color:rgba(110,156,90,0.32);
+}
+.phase.green .phase-num{color:var(--green)}
+.step-card p{
+  font-size:14px;line-height:1.75;color:var(--ink-soft);margin:0;
+}
+.step-card p strong{color:var(--ink);font-weight:600}
+.step-arrow{
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;color:var(--ink-faint);
+  user-select:none;font-weight:300;
+}
+@media(max-width:880px){
+  .step-row{grid-template-columns:1fr;gap:10px}
+  .step-arrow{transform:rotate(90deg);padding:2px 0;font-size:16px}
+}
+@media(max-width:680px){
+  .phase-head{flex-direction:column;align-items:flex-start;gap:6px}
+  .phase-num{font-size:32px}
+  .phase-head h3{font-size:22px}
+}
+
+/* === AI 友好提示 === */
+.ai-pill{
+  margin:48px auto 0;max-width:780px;
+  display:flex;gap:14px;align-items:center;
+  background:linear-gradient(135deg, rgba(96,165,250,0.10) 0%, rgba(167,139,250,0.10) 100%);
+  border:1px dashed rgba(96,165,250,0.35);
+  border-radius:14px;
+  padding:18px 22px;
+}
+.ai-pill-badge{
+  flex-shrink:0;
+  font-size:12.5px;font-weight:700;
+  background:rgba(255,255,255,0.85);
+  color:#4338ca;
+  padding:5px 12px;border-radius:999px;
+  letter-spacing:0.5px;white-space:nowrap;
+  border:1px solid rgba(96,165,250,0.25);
+}
+.ai-pill p{
+  font-size:14px;line-height:1.75;color:#3730a3;margin:0;
+}
+.ai-pill code{
+  font-family:"SF Mono",Menlo,monospace;font-size:12.5px;
+  background:rgba(255,255,255,0.5);padding:2px 6px;border-radius:4px;
+}
+@media(max-width:680px){.ai-pill{flex-direction:column;align-items:flex-start;gap:10px}}
+
+/* === CLI 展示 === */
+.cli-section .cli-wrap{display:grid;grid-template-columns:1fr 1.2fr;gap:48px;align-items:center}
+@media(max-width:880px){.cli-section .cli-wrap{grid-template-columns:1fr}}
+.cli-section h2{font-size:32px;margin-bottom:14px}
+.cli-section .lead{font-size:16px;color:var(--ink-soft);margin-bottom:18px}
+.cli-section ul{list-style:none;padding:0}
+.cli-section ul li{
+  padding:8px 0 8px 24px;position:relative;font-size:15px;color:var(--ink);
+  border-bottom:1px dashed var(--line);
+}
+.cli-section ul li:last-child{border:none}
+.cli-section ul li::before{
+  content:"✦";position:absolute;left:0;color:var(--orange);
+}
+/* === AI 对话窗口 === */
+.chatbox{
+  background:#FFFCF2;
+  border:1px solid var(--paper-edge);
+  border-radius:14px;
+  box-shadow:var(--shadow-deep);
+  overflow:hidden;
+  display:flex;flex-direction:column;
+}
+.chatbox-bar{
+  padding:14px 18px;
+  border-bottom:1px dashed var(--line);
+  background:rgba(232,221,184,0.30);
+  display:flex;align-items:center;gap:8px;
+  font-size:13px;color:var(--ink-soft);
+}
+.chatbox-bar .live-dot{
+  width:8px;height:8px;border-radius:50%;background:var(--green);
+  box-shadow:0 0 0 3px rgba(110,156,90,0.18);
+  animation:livepulse 2s ease-in-out infinite;
+}
+@keyframes livepulse{
+  0%,100%{opacity:1}
+  50%{opacity:0.55}
+}
+.chatbox-body{
+  padding:20px 18px 22px;
+  display:flex;flex-direction:column;gap:14px;
+  background:#FFFCF2;
+}
+.bubble{
+  display:flex;gap:10px;max-width:92%;
+  animation:bubblein 0.4s ease both;
+}
+.bubble.me{align-self:flex-end;flex-direction:row-reverse}
+@keyframes bubblein{
+  from{opacity:0;transform:translateY(6px)}
+  to{opacity:1;transform:translateY(0)}
+}
+.bubble-avatar{
+  flex-shrink:0;
+  width:32px;height:32px;border-radius:50%;
+  display:grid;place-items:center;
+  font-size:12.5px;font-weight:700;letter-spacing:0.5px;
+  background:var(--paper-deep);
+  border:1px solid var(--paper-edge);
+  color:var(--ink-soft);
+}
+.bubble.me .bubble-avatar{
+  background:rgba(63,115,166,0.15);
+  border-color:rgba(63,115,166,0.3);
+  color:var(--blue-deep);
+  letter-spacing:0;
+  font-size:13px;
+}
+.bubble-content{
+  background:#fff;
+  padding:10px 14px;border-radius:14px;
+  border:1px solid var(--paper-edge);
+  font-size:14.5px;line-height:1.7;
+  color:var(--ink);
+}
+.bubble.me .bubble-content{
+  background:rgba(63,115,166,0.10);
+  border-color:rgba(63,115,166,0.22);
+  color:var(--ink);
+}
+.bubble-content strong{color:var(--blue-deep);font-weight:600}
+.bubble-content .meta{
+  display:block;
+  font-size:12.5px;color:var(--ink-faint);
+  margin-top:6px;padding-top:6px;
+  border-top:1px dashed var(--line);
+}
+.bubble-content .row{display:flex;align-items:center;gap:8px;line-height:1.9}
+.bubble-content .bar{
+  display:inline-block;height:6px;border-radius:3px;
+  background:var(--paper-deep);overflow:hidden;width:80px;
+  vertical-align:middle;
+}
+.bubble-content .bar > i{
+  display:block;height:100%;background:var(--blue);
+}
+.bubble-content .warn{color:var(--orange);font-size:13.5px}
+
+/* === 它认识你 / 上下文 === */
+.context-section{padding:80px 0}
+.contrast-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:22px;
+  max-width:980px;margin:0 auto 40px;
+}
+@media(max-width:820px){.contrast-grid{grid-template-columns:1fr}}
+.contrast-card{
+  background:#FFFCF2;
+  border:1px solid var(--paper-edge);
+  border-radius:14px;
+  padding:24px 24px 22px;
+  box-shadow:var(--shadow);
+  display:flex;flex-direction:column;gap:14px;
+  position:relative;
+}
+.contrast-card.cold{
+  background:#F0EDE2;
+  filter:saturate(0.4);
+}
+.contrast-card.warm{
+  border:1.5px solid var(--orange);
+  transform:rotate(0.3deg);
+  box-shadow:var(--shadow-deep);
+}
+.contrast-card.warm::before{
+  content:"";position:absolute;top:-12px;right:24px;
+  width:54px;height:18px;
+  background:var(--tape);
+  border:1px dashed rgba(0,0,0,0.08);
+  border-radius:2px;
+  transform:rotate(3deg);
+}
+.contrast-tag{
+  font-size:12px;font-weight:700;letter-spacing:1.5px;
+  color:var(--ink-faint);
+  text-transform:uppercase;
+}
+.contrast-card.warm .contrast-tag{color:var(--orange)}
+.contrast-q{
+  font-size:16px;color:var(--ink);font-weight:700;
+  border-left:3px solid var(--line);padding:2px 0 2px 12px;
+}
+.contrast-card.warm .contrast-q{border-color:var(--orange)}
+.contrast-a{
+  font-size:14.5px;line-height:1.85;color:var(--ink-soft);
+  background:#fff;
+  padding:14px 16px;
+  border-radius:10px;
+  border:1px dashed var(--line);
+}
+.contrast-card.warm .contrast-a{
+  background:rgba(244,211,94,0.10);
+  border-color:rgba(201,125,93,0.30);
+  color:var(--ink);
+}
+.contrast-a strong{color:var(--blue-deep)}
+.contrast-card.warm .contrast-a strong{color:var(--orange)}
+.contrast-foot{
+  font-size:13px;color:var(--ink-faint);
+  font-style:italic;text-align:right;
+  margin-top:auto;
+}
+.context-list{
+  max-width:980px;margin:0 auto;
+  background:#FFFCF2;
+  border:1px solid var(--paper-edge);
+  border-radius:14px;
+  padding:26px 28px;
+  box-shadow:var(--shadow);
+}
+.context-list-label{
+  font-size:14px;font-weight:600;color:var(--ink);
+  margin-bottom:14px;letter-spacing:0.5px;
+}
+.context-tags{
+  display:flex;flex-wrap:wrap;gap:8px;
+  margin-bottom:16px;
+}
+.ctx-tag{
+  display:inline-flex;align-items:center;
+  font-size:13.5px;font-weight:500;
+  padding:5px 12px;border-radius:999px;
+  border:1px dashed;
+}
+.ctx-tag.b{color:var(--blue-deep);background:rgba(63,115,166,0.10);border-color:rgba(63,115,166,0.30)}
+.ctx-tag.o{color:#9b5f43;background:rgba(201,125,93,0.10);border-color:rgba(201,125,93,0.30)}
+.ctx-tag.g{color:#4a6b3a;background:rgba(110,156,90,0.10);border-color:rgba(110,156,90,0.30)}
+.context-list-foot{
+  font-size:13.5px;color:var(--ink-soft);
+  border-top:1px dashed var(--line);
+  padding-top:14px;line-height:1.75;font-style:italic;
+}
+
+/* === 安全 === */
+.safe-section{background:rgba(232,221,184,0.20)}
+.safe-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:22px}
+.safe-card{
+  background:#FFFCF2;border:1px solid var(--paper-edge);
+  border-radius:14px;padding:26px 24px;
+  box-shadow:var(--shadow);
+}
+.safe-card .ic{
+  width:44px;height:44px;border-radius:11px;
+  background:rgba(63,115,166,0.10);
+  color:var(--blue-deep);
+  display:grid;place-items:center;
+  margin-bottom:14px;
+}
+.safe-card .ic svg{display:block;width:22px;height:22px}
+.safe-card:nth-child(2) .ic{background:rgba(201,125,93,0.12);color:var(--orange)}
+.safe-card:nth-child(3) .ic{background:rgba(110,156,90,0.12);color:#4a6b3a}
+.safe-card:nth-child(4) .ic{background:rgba(244,211,94,0.22);color:#8c6f1f}
+.safe-card h3{font-size:17px;margin-bottom:8px}
+.safe-card p{font-size:14.5px;color:var(--ink-soft)}
+
+/* === 数据主权宣言 === */
+.manifesto{
+  margin:52px auto 0;
+  max-width:720px;
+  text-align:center;
+  position:relative;
+  padding:48px 38px 36px;
+  background:#FFFCF2;
+  border:1px dashed var(--orange);
+  border-radius:18px;
+  box-shadow:var(--shadow);
+}
+.manifesto-stamp{
+  position:absolute;
+  top:-15px;left:50%;
+  transform:translateX(-50%) rotate(-2deg);
+  background:#FFFCF2;
+  color:var(--orange);
+  border:1px solid var(--orange);
+  padding:5px 18px;
+  border-radius:999px;
+  font-size:12.5px;
+  letter-spacing:1.5px;
+  font-weight:600;
+  white-space:nowrap;
+}
+.manifesto-quote{
+  font-size:28px;
+  line-height:1.6;
+  color:var(--ink);
+  font-weight:700;
+  margin:8px 0 22px;
+  letter-spacing:0.5px;
+}
+.manifesto-quote .accent{
+  background:linear-gradient(180deg,transparent 60%,var(--yellow) 60%,var(--yellow) 90%,transparent 90%);
+  padding:0 4px;
+}
+.manifesto-foot{
+  font-size:14.5px;
+  color:var(--ink-soft);
+  line-height:1.9;
+  margin:0;
+  border-top:1px dashed var(--line);
+  padding-top:18px;
+}
+@media(max-width:680px){
+  .manifesto{padding:40px 22px 28px}
+  .manifesto-quote{font-size:21px;line-height:1.5}
+}
+
+/* === 下载 === */
+.download-section{
+  text-align:center;
+  padding:90px 0;
+}
+.download-card{
+  max-width:680px;margin:0 auto;
+  background:#FFFCF2;
+  border:1.5px dashed var(--orange);
+  border-radius:18px;
+  padding:48px 40px;
+  position:relative;
+  box-shadow:var(--shadow);
+}
+.download-card::before, .download-card::after{
+  content:"";position:absolute;width:60px;height:18px;
+  background:var(--tape);
+  border:1px dashed rgba(0,0,0,0.08);
+}
+.download-card::before{top:-10px;left:30px;transform:rotate(-4deg)}
+.download-card::after{top:-10px;right:30px;transform:rotate(3deg)}
+.download-card h2{font-size:32px;margin-bottom:12px}
+.download-card p{font-size:16px;color:var(--ink-soft);margin-bottom:28px}
+.download-card .btn-primary{font-size:18px;padding:16px 32px}
+.download-meta{
+  margin-top:18px;font-size:13px;color:var(--ink-faint);
+}
+.download-meta code{
+  font-family:"SF Mono",Menlo,monospace;font-size:12.5px;
+  background:rgba(0,0,0,0.05);padding:2px 6px;border-radius:4px;
+}
+
+/* === FAQ === */
+.faq-section{padding-bottom:60px}
+.faq-wrap{
+  display:grid;
+  grid-template-columns:1.5fr 1fr;
+  gap:36px;
+  max-width:1000px;
+  margin:0 auto;
+  align-items:start;
+}
+@media(max-width:880px){.faq-wrap{grid-template-columns:1fr;gap:24px}}
+.faq-list{margin:0}
+
+/* 联系作者卡(微信二维码) */
+.contact-card{
+  background:#FFFCF2;
+  border:1px solid var(--paper-edge);
+  border-radius:14px;
+  padding:28px 24px 22px;
+  box-shadow:var(--shadow);
+  position:sticky;
+  top:96px;
+  text-align:center;
+  transform:rotate(0.4deg);
+  transition:transform .25s ease;
+}
+.contact-card:hover{transform:rotate(0)}
+@media(max-width:880px){.contact-card{position:static;transform:rotate(0)}}
+.contact-card::before{
+  content:"";
+  position:absolute;top:-12px;left:50%;
+  transform:translateX(-50%) rotate(-2deg);
+  width:90px;height:20px;
+  background:var(--tape);
+  border:1px dashed rgba(0,0,0,0.08);
+  border-radius:2px;
+  box-shadow:0 2px 4px rgba(0,0,0,0.05);
+}
+.contact-card h3{
+  font-size:17px;color:var(--ink);
+  margin:6px 0 6px;font-weight:700;
+}
+.contact-card .lead{
+  font-size:13.5px;color:var(--ink-soft);
+  margin-bottom:18px;line-height:1.7;
+}
+.qr-box{
+  width:180px;height:180px;
+  margin:0 auto 14px;
+  background:#fff;
+  border:1px solid var(--paper-edge);
+  border-radius:8px;
+  padding:10px;
+  position:relative;
+  box-shadow:0 2px 4px rgba(0,0,0,0.04);
+}
+.qr-box img, .qr-box svg{width:100%;height:100%;display:block}
+.contact-foot{
+  font-size:12.5px;color:var(--ink-faint);
+  border-top:1px dashed var(--line);
+  padding-top:14px;
+  line-height:1.7;margin:0;
+}
+.contact-foot a{color:var(--blue-deep)}
+.contact-foot a:hover{text-decoration:underline}
+.faq-item{
+  background:#FFFCF2;
+  border:1px solid var(--paper-edge);
+  border-radius:12px;
+  margin-bottom:14px;
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.faq-item summary{
+  list-style:none;cursor:pointer;
+  padding:18px 24px;
+  font-size:16px;font-weight:600;
+  color:var(--ink);
+  display:flex;justify-content:space-between;align-items:center;
+  transition:background .15s ease;
+}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{
+  content:"+";font-size:24px;color:var(--orange);
+  transition:transform .2s ease;font-weight:300;
+}
+.faq-item[open] summary::after{transform:rotate(45deg)}
+.faq-item summary:hover{background:rgba(244,211,94,0.10)}
+.faq-item .answer{
+  padding:0 24px 20px;color:var(--ink-soft);
+  font-size:15px;line-height:1.8;
+  border-top:1px dashed var(--line);
+  margin-top:0;padding-top:16px;
+}
+.faq-item .answer code{
+  font-family:"SF Mono",Menlo,monospace;font-size:13px;
+  background:rgba(0,0,0,0.05);padding:2px 6px;border-radius:4px;
+}
+
+/* === 页脚 === */
+footer{
+  border-top:1px dashed var(--line);
+  padding:48px 0 32px;
+  background:rgba(232,221,184,0.20);
+}
+.footer-grid{
+  display:grid;grid-template-columns:1.4fr 1fr 1fr;gap:40px;
+  margin-bottom:32px;
+}
+@media(max-width:680px){.footer-grid{grid-template-columns:1fr;gap:28px}}
+.footer-col h4{font-size:14px;color:var(--ink);margin-bottom:14px;letter-spacing:1px}
+.footer-col a, .footer-col p{display:block;font-size:14px;color:var(--ink-soft);margin-bottom:8px;line-height:1.7}
+.footer-col a:hover{color:var(--blue-deep)}
+.footer-bottom{
+  border-top:1px dashed var(--line);
+  padding-top:20px;
+  display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;
+  font-size:13px;color:var(--ink-faint);
+}
+.footer-bottom .heart{color:var(--orange)}
+
+/* === 装饰小元素 === */
+.scribble{
+  display:inline-block;
+  width:80px;height:14px;
+  vertical-align:middle;
+  margin:0 6px;
+}
+</style>
+</head>
+<body>
+
+<!-- 顶栏 -->
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="#" class="brand">
+      <img class="brand-mark" src="assets/logo.svg" alt="狗子" width="34" height="34" />
+      <span>狗子</span>
+    </a>
+    <nav class="nav-links">
+      <a href="#features">功能</a>
+      <a href="#cli">对 AI 说</a>
+      <a href="#download">下载</a>
+      <a href="#faq">FAQ</a>
+      <a href="#download" class="nav-cta">下载 Mac 版</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container hero-grid">
+    <div>
+      <span class="eyebrow">AI Native · 它最早叫"人生清单"</span>
+      <h1>成为<span class="hl">更好的自己</span>,<br>从认真过好每一周开始。</h1>
+      <p class="hero-sub">一个本地优先的桌面应用 — 帮你看清自己、专注下来,把每一周过得更像自己想要的样子。</p>
+      <p class="hero-quote">"让正确的行为变得极其容易,让错误的后果变得极其可见。"</p>
+      <div class="cta-row">
+        <a href="#download" class="btn btn-primary">↓ 下载 Mac 版</a>
+        <a href="#features" class="btn btn-ghost">看看它能做什么</a>
+      </div>
+      <div class="hero-meta">
+        <span><span class="dot"></span>v1.0.1 已发布</span>
+        <span><span class="dot" style="background:var(--blue)"></span>跟 AI 说话就能用</span>
+        <span><span class="dot" style="background:var(--ink-faint)"></span>Mac 原生</span>
+        <span><span class="dot" style="background:var(--orange)"></span>数据只在你电脑里</span>
+      </div>
+    </div>
+    <div class="screenshot-card">
+      <img class="shot-img" src="assets/hero-screenshot.png" alt="狗子 工作台" loading="lazy" />
+    </div>
+  </div>
+</section>
+
+<!-- 缘起 -->
+<section id="origin">
+  <div class="container">
+    <article class="origin-card">
+      <span class="origin-tag">缘起 · 它最早叫"人生清单"</span>
+      <p class="lead">有一天我突然意识到,自己已经好几年没什么长进了。</p>
+      <p>计划写了一堆,执行总是一塌糊涂;复盘也认真写过,可下一周仍然在重复同样的事 — 表格不行、To-Do 不行、各种漂亮的 SaaS 也不行。</p>
+      <p>我想要的,<span class="turn">是一个能陪我看清自己的工具</span> — 它得知道我今年想成为什么样的人,也得知道我今天到底有没有在往那个方向走。</p>
+      <p>于是,有了「狗子」。</p>
+      <p class="origin-sign">— 写给那些想认真生活、却又不太自律的人</p>
+    </article>
+  </div>
+</section>
+
+<!-- 痛点 -->
+<section id="why">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">WHY</div>
+      <h2>也许你也有过<br>这些时刻</h2>
+      <p>这些时刻,我们都熟 — 所以才有了狗子。</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <span class="pain-label">方向感</span>
+        <p class="pain-quote">又一年了,我好像没什么长进。</p>
+        <div class="arrow">→ 把"想成为的人"写下来,每周回看一次,你会看见自己在变。</div>
+      </div>
+      <div class="pain-card">
+        <span class="pain-label">主次</span>
+        <p class="pain-quote">想锻炼、想读书、想攒钱 — 哪个最重要?</p>
+        <div class="arrow">→ 人生清单 → 年度目标 → 本周做的事,串成一条往同一个方向走的线。</div>
+      </div>
+      <div class="pain-card">
+        <span class="pain-label">经济基础</span>
+        <p class="pain-quote">钱没管明白 — 谈什么成为更好的自己。</p>
+        <div class="arrow">→ 账本和年度目标绑定。每周对账一次 — 钱先管明白,理想才不是空话。</div>
+      </div>
+      <div class="pain-card">
+        <span class="pain-label">知行合一</span>
+        <p class="pain-quote">计划写得一手好,执行起来一塌糊涂。</p>
+        <div class="arrow">→ 从冒出念头到 25 分钟番茄,中间每一步都有人接住。</div>
+      </div>
+      <div class="pain-card">
+        <span class="pain-label">主动权</span>
+        <p class="pain-quote">忙了一整天 — 自己真正想做的事,一件没碰。</p>
+        <div class="arrow">→ 每个新任务先经过四象限筛一遍 — 别让别人的"紧急",绑架你的"重要"。</div>
+      </div>
+      <div class="pain-card">
+        <span class="pain-label">沉淀</span>
+        <p class="pain-quote">翻开去年的复盘 — 字字都是回旋镖。</p>
+        <div class="arrow">→ 你又要踩同一个坑时,狗子第一时间拦住你 — 这话你已经说过 3 遍了。</div>
+      </div>
+      <div class="pain-card">
+        <span class="pain-label">原则</span>
+        <p class="pain-quote">我以为我有三观 — 真要做决定时,还是凭感觉。</p>
+        <div class="arrow">→ 把抽象的三观,落成一条条具体的"下次该怎么做"。让重要选择,尽量少靠临场情绪。</div>
+      </div>
+      <div class="pain-card">
+        <span class="pain-label">AI 鸡汤</span>
+        <p class="pain-quote">跟通用 AI 聊半天,它给的还是一篇博客。</p>
+        <div class="arrow">→ 狗子里的 AI 看完你的全部上下文,给的是只有你能用的建议。</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 功能 -->
+<section id="features" class="feature-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">HOW IT WORKS</div>
+      <h2>从一个长远的方向,<br>到今天专注的 25 分钟。</h2>
+      <p>狗子的设计逻辑很简单 — 把"想成为什么样的人"逐层拆细,让每一天的行动,都回得到长远的方向上。</p>
+    </div>
+
+    <!-- 章节 1:把方向定下来 -->
+    <div class="phase">
+      <div class="phase-head">
+        <span class="phase-num">01</span>
+        <div class="phase-text">
+          <h3>把<span class="turn">方向</span>定下来</h3>
+          <p>从这辈子想完成的事,一路拆到这季度怎么落地。</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-card">
+          <span class="step-tag">人生清单</span>
+          <p>写一件这辈子想完成的事 — 哪怕只是"<strong>去南极看一次极光</strong>"。这是你所有目标的长期锚点。</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <span class="step-tag">5 年愿景</span>
+          <p>给未来 5 年定一个方向,作为后续年度目标和季度 OKR 的<strong>总锚点</strong>。一句话就够。</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <span class="step-tag">年度目标</span>
+          <p>今年最想推进的<strong>一件事</strong>。可以挂到 5 年愿景下,也可以先不挂 — 等想清楚了再挂。</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <span class="step-tag">季度 OKR</span>
+          <p>O 是方向(一句话),配上至少 1 个 KR(衡量做到的标准)。<strong>每周更新进度</strong>,超时未动会被标红。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 章节 2:把任务做出来 -->
+    <div class="phase warm">
+      <div class="phase-head">
+        <span class="phase-num">02</span>
+        <div class="phase-text">
+          <h3>把<span class="turn">任务</span>做出来</h3>
+          <p>从冒出念头,到坐下来专注的那 25 分钟,一条不漏。</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-card">
+          <span class="step-tag">任务池</span>
+          <p>念头随时丢进收件箱 — 第一步只负责"<strong>接住念头</strong>",重要紧急程度下一步再判。</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <span class="step-tag">象限研判</span>
+          <p>Q1 立刻做、Q2 锁时间做(<strong>OKR 主战场</strong>)、Q3 能托就托、Q4 别做。给每条任务点一个。</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <span class="step-tag">本周计划</span>
+          <p>把研判过的任务排进本周。自动出现在工作台 — <strong>不会被遗忘</strong>。</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <span class="step-tag">今日 + 番茄</span>
+          <p>今日清单只放真要做的;开 25 分钟番茄,倒计时结束自动统计 — 一天有几块<strong>真正的专注时长</strong>,一目了然。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 章节 3:让经验留下来 -->
+    <div class="phase green">
+      <div class="phase-head">
+        <span class="phase-num">03</span>
+        <div class="phase-text">
+          <h3>让<span class="turn">经验</span>留下来</h3>
+          <p>每周回看一次,把感受沉淀成可以反复使用的判断标准。</p>
+        </div>
+      </div>
+      <div class="step-row">
+        <div class="step-card">
+          <span class="step-tag">本周复盘</span>
+          <p>周末 5 分钟,回答 3 个引导问题:本周最骄傲的一件事?最想改的一个习惯?<strong>下周给自己承诺一件什么</strong>?</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <span class="step-tag">财务记账</span>
+          <p>花完钱顺手记一笔,自动归类。月底 / 年底配合 OKR 看 —<strong> 你的钱有没有花在你想成为的人身上</strong>。</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <span class="step-tag">杂思笔记</span>
+          <p>想到什么就丢一条 — 灵感、待确认事项、突然想通的事。<strong>按日期倒序回看</strong>,你能看见自己在变。</p>
+        </div>
+        <div class="step-arrow">→</div>
+        <div class="step-card">
+          <span class="step-tag">原则手册</span>
+          <p>把反复出现的判断难题,沉淀成"下次该怎么做"。<strong>让重要选择,尽量少靠临场情绪</strong>。</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI Native 提示 -->
+    <div class="ai-pill">
+      <span class="ai-pill-badge">✦ AI Native</span>
+      <p>上面这 12 步,每一步都可以<strong>一句话让 AI 替你做完</strong> — 不用打开 APP,跟你的 AI 助手说"狗子,把'去南极看一次极光'加进我的人生清单",它就帮你写好了。打开 APP 操作和喊一句话,都是一等公民。</p>
+    </div>
+  </div>
+</section>
+
+<!-- AI Native -->
+<section id="cli" class="cli-section">
+  <div class="container cli-wrap">
+    <div>
+      <div class="section-eyebrow">AI NATIVE</div>
+      <h2>你跟 AI 说一句话,<br>狗子就把事办了。</h2>
+      <p class="lead">狗子从设计第一天就假设 — <strong>你身边有一个 AI 助手</strong>。它不是"也支持 AI"的传统 APP,而是把 AI 当作默认入口来设计的:<strong>打开 APP</strong> 和 <strong>喊一句"狗子"</strong>,都能让事情发生。</p>
+      <ul>
+        <li>吃完饭随口一句"<strong>狗子,我刚花了 35 块吃午饭</strong>" — 自动归类,记账完成</li>
+        <li>想到一件事"<strong>狗子,记一个任务:周五前完成发布说明</strong>" — 直接进收件箱</li>
+        <li>周末一句"<strong>狗子,帮我写本周回顾</strong>" — AI 读完你这周的进展,先出草稿</li>
+        <li>"<strong>狗子,把'去南极看一次极光'加进我的人生清单</strong>" — 几年才填一次的事,也只是一句话</li>
+        <li>原生集成 Claude Code、Codex、OpenCode、Hermes、OpenClaw 等 5 个主流 AI agent,未来 macOS 系统 AI、手机 AI 也都能喊 — <strong>不绑死在某一家</strong></li>
+      </ul>
+    </div>
+    <div class="chatbox" aria-label="跟 AI 聊天示例">
+      <div class="chatbox-bar">
+        <span class="live-dot"></span>
+        <span>跟你的 AI 聊一句,狗子在背后默默记好</span>
+      </div>
+      <div class="chatbox-body">
+        <div class="bubble me">
+          <span class="bubble-avatar">你</span>
+          <div class="bubble-content">我刚花了 35 块吃午饭</div>
+        </div>
+        <div class="bubble">
+          <span class="bubble-avatar">AI</span>
+          <div class="bubble-content">
+            好的,已记 <strong>午餐 ¥35</strong>(餐饮类)。
+            <span class="meta">本月餐饮已花 ¥1240,在预算内 ✓</span>
+          </div>
+        </div>
+
+        <div class="bubble me">
+          <span class="bubble-avatar">你</span>
+          <div class="bubble-content">看下今年定的目标</div>
+        </div>
+        <div class="bubble">
+          <span class="bubble-avatar">AI</span>
+          <div class="bubble-content">
+            <div class="row">▸ 成为更好的自己 <span class="bar"><i style="width:78%"></i></span> <strong>78%</strong></div>
+            <div class="row">▸ 体重 134 → 130 斤 <span class="bar"><i style="width:90%"></i></span> <strong>90%</strong></div>
+            <div class="warn">⚠ KR 1.3「无人机项目」14 天没动过了,要不要看一下?</div>
+          </div>
+        </div>
+
+        <div class="bubble me">
+          <span class="bubble-avatar">你</span>
+          <div class="bubble-content">帮我写本周回顾</div>
+        </div>
+        <div class="bubble">
+          <span class="bubble-avatar">AI</span>
+          <div class="bubble-content">
+            本周完成 <strong>18 件事</strong>、延期 3 件。给你拟了一段草稿:
+            <span class="meta">"本周最骄傲的是终于把发布说明写完了……" — 要不要打开看看?</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 它认识你 -->
+<section id="context" class="context-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">CONTEXT-AWARE</div>
+      <h2>通用 AI 对你一无所知。<br>狗子里的 AI,<span class="hl">认识你</span>。</h2>
+      <p>同一个问题、同一个 AI 模型,回答的质量天差地别 — 区别在于,你的 AI 助手身边有没有<strong>那本只属于你的人生笔记本</strong>。</p>
+    </div>
+
+    <!-- 对比 -->
+    <div class="contrast-grid">
+      <div class="contrast-card cold">
+        <div class="contrast-tag">没有上下文 · 通用 AI</div>
+        <div class="contrast-q">"我这周该做什么?"</div>
+        <div class="contrast-a">
+          这里有 5 条提升效率的一般性建议:<br>
+          1. 设定 SMART 目标<br>
+          2. 优先处理重要紧急的事<br>
+          3. 学会拒绝<br>
+          4. 一次只做一件事<br>
+          5. 给自己留出休息时间……
+        </div>
+        <div class="contrast-foot">— 像一篇博客</div>
+      </div>
+
+      <div class="contrast-card warm">
+        <div class="contrast-tag">有上下文 · 狗子里的 AI</div>
+        <div class="contrast-q">"我这周该做什么?"</div>
+        <div class="contrast-a">
+          看了你最近 4 周 —<br>
+          ▸ <strong>KR 1.3「无人机项目」</strong>已经 14 天没动,该解冻了<br>
+          ▸ 体重 KR 进度 90%,继续保持每周 2 次运动就行<br>
+          ▸ 上周延期了 3 件任务,这周先把它们清掉<br>
+          ▸ 你给自己写过的<strong>「下周承诺」是健身 3 次</strong> — 要不要排进周一三五早上?
+        </div>
+        <div class="contrast-foot">— 像一个真的认识你的朋友</div>
+      </div>
+    </div>
+
+    <!-- 它能看到的关于你的一切 -->
+    <div class="context-list">
+      <div class="context-list-label">▸ 它能看到的,关于"你"的一切</div>
+      <div class="context-tags">
+        <span class="ctx-tag b">人生清单</span>
+        <span class="ctx-tag o">5 年愿景</span>
+        <span class="ctx-tag g">年度目标</span>
+        <span class="ctx-tag b">季度 OKR + 进度</span>
+        <span class="ctx-tag o">本周计划</span>
+        <span class="ctx-tag g">今日清单</span>
+        <span class="ctx-tag b">历次复盘</span>
+        <span class="ctx-tag o">账本与预算</span>
+        <span class="ctx-tag g">原则手册</span>
+        <span class="ctx-tag b">杂思笔记</span>
+        <span class="ctx-tag o">每日 Checklist</span>
+        <span class="ctx-tag g">专注时长</span>
+      </div>
+      <p class="context-list-foot">这些不是 AI 替你猜的,是<strong>你一周一周写下来的、真实的"你"</strong>。AI 不是从零认识你 — 它从你已有的全部上下文出发,给你只有你能用的建议。</p>
+    </div>
+  </div>
+</section>
+
+<!-- 安全 -->
+<section class="safe-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">DATA SOVEREIGNTY</div>
+      <h2>AI 时代的<br>个人数据主权</h2>
+      <p>大多数 AI 应用把你的数据存在他们的云端 — 你其实只是"租用"一个界面来看自己的人生。狗子把这个关系倒过来:<strong>让 AI 服务你,而不是让 AI 拥有你的数据</strong>。</p>
+    </div>
+    <div class="safe-grid">
+      <div class="safe-card">
+        <div class="ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="5" y="11" width="14" height="9" rx="2"/>
+            <path d="M8 11V7.5a4 4 0 1 1 8 0V11"/>
+            <circle cx="12" cy="15.4" r="1.2" fill="currentColor"/>
+          </svg>
+        </div>
+        <h3>数据只在你电脑里</h3>
+        <p>账本、目标、复盘、笔记都加密保存在你电脑上的一个文件里。密码只有你知道 — 我们没有任何后门,也没有"找回密码"按钮。</p>
+      </div>
+      <div class="safe-card">
+        <div class="ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3 L20 6 V12 C20 16.5 16.5 20 12 21 C7.5 20 4 16.5 4 12 V6 L12 3z"/>
+            <path d="M9 12l2 2 4-4"/>
+          </svg>
+        </div>
+        <h3>多重锁屏保护</h3>
+        <p>打开 APP 要密码,闲置一会儿会自动锁屏。AI 调用之前也得先解锁 — 别人拿到你的电脑,什么都看不到。</p>
+      </div>
+      <div class="safe-card">
+        <div class="ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 9.5 Q12 2 21 9.5"/>
+            <path d="M6.5 13 Q12 8 17.5 13"/>
+            <path d="M9.5 16 Q12 13.5 14.5 16"/>
+            <circle cx="12" cy="19" r="1" fill="currentColor"/>
+            <line x1="4" y1="4" x2="20" y2="20" stroke-width="1.8"/>
+          </svg>
+        </div>
+        <h3>不联网,不追踪</h3>
+        <p>默认完全离线,核心功能不需要任何网络。不会偷偷上传你的数据,也不会埋点回传 — 没有云端,没有账号。</p>
+      </div>
+      <div class="safe-card">
+        <div class="ic">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 7 L12 3 L21 7 V17 L12 21 L3 17 Z"/>
+            <path d="M3 7 L12 11 L21 7"/>
+            <path d="M12 11 V21"/>
+          </svg>
+        </div>
+        <h3>导出就是备份</h3>
+        <p>一键导出加密文件,放进 iCloud、Time Machine 或移动硬盘都行。导入失败会自动还原,绝不丢东西。</p>
+      </div>
+    </div>
+
+    <!-- Manifesto -->
+    <div class="manifesto">
+      <span class="manifesto-stamp">我们的立场</span>
+      <p class="manifesto-quote">
+        AI 是你雇来的<span class="accent">助手</span>,<br>
+        不是你的<span class="accent">房东</span>。
+      </p>
+      <p class="manifesto-foot">
+        你的人生数据 — 目标、复盘、账本、思考 — 应该和你的家庭相册一样,只在你这里。<br>
+        狗子不替你"保管",既不能,也不想。
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- 下载 -->
+<section id="download" class="download-section">
+  <div class="container">
+    <div class="download-card">
+      <h2>开始用 狗子</h2>
+      <p>免费、无账号、不联网。下载就能用。</p>
+      <a href="https://github.com/your-username/goubi/releases/latest" class="btn btn-primary" target="_blank" rel="noopener">↓ 前往 GitHub Releases 下载</a>
+      <div class="download-meta">
+        当前版本 <code>v1.0.1</code> · macOS 12+ · Apple Silicon &amp; Intel<br>
+        Windows / Linux 版尚在路上
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="faq-section">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-eyebrow">FAQ &amp; CONTACT</div>
+      <h2>常见问题 / 提意见</h2>
+    </div>
+    <div class="faq-wrap">
+      <div class="faq-list">
+        <details class="faq-item">
+          <summary>这个 APP 收费吗?</summary>
+          <div class="answer">不收费。狗子是个人项目,目标是先把自己的目标管理做好,再分享给同样不太自律的人。如果哪天要收费,会提前说。</div>
+        </details>
+        <details class="faq-item">
+          <summary>数据会上传到云端吗?</summary>
+          <div class="answer">不会。所有数据都加密保存在你电脑上的一个文件里 — 没有云端,没有账号,APP 默认不联网,核心功能完全离线可用。</div>
+        </details>
+        <details class="faq-item">
+          <summary>忘记密码了怎么办?</summary>
+          <div class="answer">没办法找回。狗子用的是端到端加密 — 密码只有你知道,我们没有任何后门。<strong>请务必记好你的密码</strong>,或者用密码管理器(1Password / Bitwarden)保存一份。</div>
+        </details>
+        <details class="faq-item">
+          <summary>怎么让 AI 帮我用狗子?</summary>
+          <div class="answer">打开 APP 的「设置 → AI Agent 集成」,你会看到一组已经原生集成的 AI:<strong>Claude Code、Codex、OpenCode、Hermes、OpenClaw</strong>。找到你在用的那个,点「安装 Skill」,重启一下那个 AI 就行了。<br><br>之后你只管说话:"狗子,我刚花了 35 块吃午饭"、"狗子,记一个任务:周五前完成发布说明" — AI 自动帮你做完。<br><br>不在列表里的 AI?只要它能在你电脑上调本地工具,后续会陆续接入 — 未来 macOS 系统 AI、手机 AI 也是同一套思路,<strong>不会绑死在某一家</strong>。</div>
+        </details>
+        <details class="faq-item">
+          <summary>支持 Windows / Linux / iOS 吗?</summary>
+          <div class="answer">现阶段只有 macOS 原生版本,Windows / Linux 在路上。<br><br>iOS / Android <strong>不会做</strong> — 这不是优先级问题,是有意为之:<br>· 移动端要好用,数据必然要走云端同步 — 与我们「数据只在你电脑里」的立场冲突;<br>· 移动端 AI 目前还调不到本地工具,AI Native 的体验在手机上跑不起来。<br><br>我们宁愿少做一个移动端,也不愿让你的人生数据搬家到云端。</div>
+        </details>
+      </div>
+
+      <!-- 联系作者卡(微信二维码) -->
+      <aside class="contact-card">
+        <h3>有想说的?加我聊聊。</h3>
+        <p class="lead">bug 反馈、功能建议,或者就是想聊聊产品 — 都可以扫码加我微信。</p>
+        <!--
+          ╭──────────────────────────────────────────────────────╮
+          │ 替换微信二维码:                                              │
+          │ 把你的二维码图片命名为 wechat-qr.png 放到 goubi/assets/ 目录, │
+          │ 然后把下面整个 <svg>...</svg> 块替换成:                        │
+          │   <img src="assets/wechat-qr.png" alt="作者微信二维码">       │
+          ╰──────────────────────────────────────────────────────╯
+        -->
+        <div class="qr-box">
+          <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" aria-label="二维码占位">
+            <rect width="100" height="100" fill="#fff"/>
+            <g fill="#2B2A26">
+              <rect x="6" y="6" width="22" height="22"/>
+              <rect x="72" y="6" width="22" height="22"/>
+              <rect x="6" y="72" width="22" height="22"/>
+            </g>
+            <g fill="#fff">
+              <rect x="10" y="10" width="14" height="14"/>
+              <rect x="76" y="10" width="14" height="14"/>
+              <rect x="10" y="76" width="14" height="14"/>
+            </g>
+            <g fill="#2B2A26">
+              <rect x="14" y="14" width="6" height="6"/>
+              <rect x="80" y="14" width="6" height="6"/>
+              <rect x="14" y="80" width="6" height="6"/>
+              <rect x="34" y="6" width="4" height="4"/>
+              <rect x="42" y="10" width="4" height="4"/>
+              <rect x="50" y="6" width="4" height="4"/>
+              <rect x="58" y="14" width="4" height="4"/>
+              <rect x="34" y="18" width="4" height="4"/>
+              <rect x="46" y="22" width="4" height="4"/>
+              <rect x="62" y="18" width="4" height="4"/>
+              <rect x="6" y="34" width="4" height="4"/>
+              <rect x="14" y="42" width="4" height="4"/>
+              <rect x="22" y="34" width="4" height="4"/>
+              <rect x="6" y="50" width="4" height="4"/>
+              <rect x="18" y="58" width="4" height="4"/>
+              <rect x="34" y="34" width="4" height="4"/>
+              <rect x="42" y="38" width="4" height="4"/>
+              <rect x="38" y="46" width="4" height="4"/>
+              <rect x="50" y="34" width="4" height="4"/>
+              <rect x="58" y="42" width="4" height="4"/>
+              <rect x="62" y="34" width="4" height="4"/>
+              <rect x="34" y="50" width="4" height="4"/>
+              <rect x="46" y="54" width="4" height="4"/>
+              <rect x="50" y="62" width="4" height="4"/>
+              <rect x="58" y="58" width="4" height="4"/>
+              <rect x="62" y="50" width="4" height="4"/>
+              <rect x="74" y="34" width="4" height="4"/>
+              <rect x="86" y="42" width="4" height="4"/>
+              <rect x="78" y="50" width="4" height="4"/>
+              <rect x="90" y="58" width="4" height="4"/>
+              <rect x="34" y="74" width="4" height="4"/>
+              <rect x="42" y="78" width="4" height="4"/>
+              <rect x="58" y="74" width="4" height="4"/>
+              <rect x="62" y="86" width="4" height="4"/>
+              <rect x="50" y="90" width="4" height="4"/>
+            </g>
+            <text x="50" y="56" text-anchor="middle" font-size="6" fill="#C97D5D" font-family="system-ui" font-weight="600">占位</text>
+          </svg>
+        </div>
+        <p class="contact-foot">
+          也可以发邮件:<br>
+          <a href="mailto:chinaxnccm@gmail.com">chinaxnccm@gmail.com</a>
+        </p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- 页脚 -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <div class="brand" style="margin-bottom:14px">
+          <img class="brand-mark" src="assets/logo.svg" alt="狗子" width="34" height="34" />
+          <span>狗子</span>
+        </div>
+        <p style="color:var(--ink-soft);max-width:340px">让正确的行为变得极其容易,让错误的后果变得极其可见。一个本地优先的个人管理桌面应用 — 写给那些想认真生活、却又不太自律的人。</p>
+      </div>
+      <div class="footer-col">
+        <h4>产品</h4>
+        <a href="#features">功能列表</a>
+        <a href="#cli">AI Native</a>
+        <a href="#download">下载</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-col">
+        <h4>联系</h4>
+        <a href="mailto:chinaxnccm@gmail.com">chinaxnccm@gmail.com</a>
+        <a href="https://github.com/your-username/goubi" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/your-username/goubi/releases" target="_blank" rel="noopener">所有版本</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 狗子 · 保留所有权利</span>
+      <span>失意程序员,在迷茫里做的一件事</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
