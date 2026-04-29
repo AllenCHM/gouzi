@@ -711,9 +711,19 @@ section{padding:80px 0}
 .safe-card p{font-size:14.5px;color:var(--ink-soft)}
 
 /* === 数据主权宣言 === */
+.manifesto-layout{
+  margin-top:52px;
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 240px;
+  gap:48px;
+  align-items:center;
+  max-width:1100px;
+  margin-left:auto;margin-right:auto;
+}
 .manifesto{
-  margin:52px auto 0;
+  margin:0;
   max-width:720px;
+  justify-self:end;
   text-align:center;
   position:relative;
   padding:48px 38px 36px;
@@ -756,9 +766,50 @@ section{padding:80px 0}
   border-top:1px dashed var(--line);
   padding-top:18px;
 }
+@media(max-width:980px){
+  .manifesto-layout{grid-template-columns:1fr;gap:32px}
+  .manifesto{justify-self:center}
+}
 @media(max-width:680px){
   .manifesto{padding:40px 22px 28px}
   .manifesto-quote{font-size:21px;line-height:1.5}
+}
+
+/* === 通用卡片旁 logo 装饰（origin/manifesto/download 复用） === */
+.card-mark{
+  position:relative;
+  width:280px;height:280px;
+  justify-self:center;
+}
+.card-mark--small{
+  width:240px;height:240px;
+}
+.card-mark__halo{
+  width:100%;height:100%;
+  border-radius:50%;
+  background:radial-gradient(circle at 35% 30%, #F5EDE0 0%, #E8D9C0 100%);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 30px 60px rgba(139,94,60,0.12), inset 0 0 0 1px rgba(184,137,92,0.12);
+}
+.card-mark__logo{
+  width:62%;height:62%;
+  filter:drop-shadow(0 4px 8px rgba(61,40,23,0.12));
+}
+.card-mark__star{
+  position:absolute;
+  color:var(--orange);
+  pointer-events:none;
+  filter:drop-shadow(0 2px 4px rgba(201,125,93,0.25));
+}
+.card-mark__star--1{top:-12px;right:24px;width:26px;height:26px}
+.card-mark__star--2{top:60px;right:-22px;width:16px;height:16px;opacity:0.8}
+.card-mark__star--3{bottom:24px;left:-14px;width:20px;height:20px;opacity:0.7}
+.card-mark__star--4{bottom:-8px;right:50px;width:14px;height:14px;opacity:0.6}
+@media(max-width:980px){
+  .card-mark{width:180px;height:180px;order:-1}
+  .card-mark--small{width:160px;height:160px}
+  .card-mark__star--1{width:18px;height:18px}
+  .card-mark__star--2,.card-mark__star--3,.card-mark__star--4{width:12px;height:12px}
 }
 
 /* === 下载 === */
@@ -766,14 +817,26 @@ section{padding:80px 0}
   text-align:center;
   padding:90px 0;
 }
+.download-layout{
+  display:grid;
+  grid-template-columns:minmax(0, 1fr) 280px;
+  gap:60px;
+  align-items:center;
+  max-width:1180px;
+}
 .download-card{
-  max-width:680px;margin:0 auto;
+  max-width:680px;
+  justify-self:end;
   background:#FFFCF2;
   border:1.5px dashed var(--orange);
   border-radius:18px;
   padding:48px 40px;
   position:relative;
   box-shadow:var(--shadow);
+}
+@media(max-width:980px){
+  .download-layout{grid-template-columns:1fr;gap:32px}
+  .download-card{justify-self:center;margin:0 auto}
 }
 .download-card::before, .download-card::after{
   content:"";position:absolute;width:60px;height:18px;
@@ -1338,23 +1401,33 @@ footer{
     </div>
 
     <!-- Manifesto -->
-    <div class="manifesto">
-      <span class="manifesto-stamp">我们的立场</span>
-      <p class="manifesto-quote">
-        AI 是你雇来的<span class="accent">助手</span>,<br>
-        不是你的<span class="accent">房东</span>。
-      </p>
-      <p class="manifesto-foot">
-        你的人生数据 — 目标、复盘、账本、思考 — 应该和你的家庭相册一样,只在你这里。<br>
-        狗子不替你"保管",既不能,也不想。
-      </p>
+    <div class="manifesto-layout">
+      <div class="manifesto">
+        <span class="manifesto-stamp">我们的立场</span>
+        <p class="manifesto-quote">
+          AI 是你雇来的<span class="accent">助手</span>,<br>
+          不是你的<span class="accent">房东</span>。
+        </p>
+        <p class="manifesto-foot">
+          你的人生数据 — 目标、复盘、账本、思考 — 应该和你的家庭相册一样,只在你这里。<br>
+          狗子不替你"保管",既不能,也不想。
+        </p>
+      </div>
+      <aside class="card-mark card-mark--small" aria-hidden="true">
+        <div class="card-mark__halo">
+          <img src="assets/logo.svg" alt="" class="card-mark__logo">
+        </div>
+        <svg class="card-mark__star card-mark__star--1" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+        <svg class="card-mark__star card-mark__star--2" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+        <svg class="card-mark__star card-mark__star--3" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+      </aside>
     </div>
   </div>
 </section>
 
 <!-- 下载 -->
 <section id="download" class="download-section">
-  <div class="container">
+  <div class="container download-layout">
     <div class="download-card">
       <h2>开始用 狗子</h2>
       <p>免费、无账号、不联网。下载就能用。</p>
@@ -1365,6 +1438,15 @@ footer{
         · Intel / Windows / Linux 版尚在路上
       </div>
     </div>
+    <aside class="card-mark" aria-hidden="true">
+      <div class="card-mark__halo">
+        <img src="assets/logo.svg" alt="" class="card-mark__logo">
+      </div>
+      <svg class="card-mark__star card-mark__star--1" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+      <svg class="card-mark__star card-mark__star--2" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+      <svg class="card-mark__star card-mark__star--3" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+      <svg class="card-mark__star card-mark__star--4" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
+    </aside>
   </div>
 </section>
 
