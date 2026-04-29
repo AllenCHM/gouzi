@@ -682,19 +682,9 @@ section{padding:80px 0}
 .safe-card p{font-size:14.5px;color:var(--ink-soft)}
 
 /* === 数据主权宣言 === */
-.manifesto-layout{
-  margin-top:52px;
-  display:grid;
-  grid-template-columns:minmax(0, 1fr) 300px;
-  gap:60px;
-  align-items:center;
-  max-width:1180px;
-  margin-left:auto;margin-right:auto;
-}
 .manifesto{
   margin:0;
-  max-width:720px;
-  justify-self:end;
+  width:100%;
   text-align:center;
   position:relative;
   padding:48px 38px 36px;
@@ -702,6 +692,7 @@ section{padding:80px 0}
   border:1px dashed var(--orange);
   border-radius:18px;
   box-shadow:var(--shadow);
+  display:flex;flex-direction:column;justify-content:center;
 }
 .manifesto-stamp{
   position:absolute;
@@ -736,10 +727,6 @@ section{padding:80px 0}
   margin:0;
   border-top:1px dashed var(--line);
   padding-top:18px;
-}
-@media(max-width:980px){
-  .manifesto-layout{grid-template-columns:1fr;gap:32px}
-  .manifesto{justify-self:center}
 }
 @media(max-width:680px){
   .manifesto{padding:40px 22px 28px}
@@ -810,26 +797,26 @@ section{padding:80px 0}
   text-align:center;
   padding:90px 0;
 }
-.download-layout{
+.cta-row{
   display:grid;
-  grid-template-columns:minmax(0, 1fr) 300px;
-  gap:60px;
-  align-items:center;
+  grid-template-columns:1fr 1fr;
+  gap:32px;
+  align-items:stretch;
   max-width:1180px;
+  margin:0 auto;
 }
 .download-card{
-  max-width:680px;
-  justify-self:end;
+  width:100%;
   background:#FFFCF2;
   border:1.5px dashed var(--orange);
   border-radius:18px;
   padding:48px 40px;
   position:relative;
   box-shadow:var(--shadow);
+  display:flex;flex-direction:column;justify-content:center;
 }
-@media(max-width:980px){
-  .download-layout{grid-template-columns:1fr;gap:32px}
-  .download-card{justify-self:center;margin:0 auto}
+@media(max-width:880px){
+  .cta-row{grid-template-columns:1fr;gap:28px}
 }
 .download-card::before, .download-card::after{
   content:"";position:absolute;width:60px;height:18px;
@@ -1397,8 +1384,13 @@ footer{
       </div>
     </div>
 
-    <!-- Manifesto -->
-    <div class="manifesto-layout">
+  </div>
+</section>
+
+<!-- 立场 + 下载（合并成一行） -->
+<section id="download" class="download-section">
+  <div class="container">
+    <div class="cta-row">
       <div class="manifesto">
         <span class="manifesto-stamp">我们的立场</span>
         <p class="manifesto-quote">
@@ -1410,49 +1402,17 @@ footer{
           狗子不替你"保管",既不能,也不想。
         </p>
       </div>
-      <aside class="badge badge--manifesto" aria-hidden="true">
-        <svg class="badge__rim" viewBox="0 0 280 280">
-          <defs>
-            <path id="badge-rim-manifesto" d="M 22 140 a 118 118 0 1 1 236 0 a 118 118 0 1 1 -236 0"/>
-          </defs>
-          <circle cx="140" cy="140" r="138" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5" opacity="0.35"/>
-          <circle cx="140" cy="140" r="98" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 4" opacity="0.3"/>
-          <text class="badge__text"><textPath href="#badge-rim-manifesto" startOffset="0">YOUR DATA · YOUR HOUSE · 数据主权 · YOUR DATA · YOUR HOUSE · 数据主权 · </textPath></text>
-        </svg>
-        <img src="assets/logo-mark.svg" alt="" class="badge__logo">
-        <svg class="badge__star badge__star--1" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-        <svg class="badge__star badge__star--2" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-      </aside>
-    </div>
-  </div>
-</section>
-
-<!-- 下载 -->
-<section id="download" class="download-section">
-  <div class="container download-layout">
-    <div class="download-card">
-      <h2>开始用 狗子</h2>
-      <p>免费、无账号、不联网。下载就能用。</p>
-      <a href="https://github.com/AllenCHM/gouzi/releases/download/v1.0.1/gouzi_1.0.1_aarch64.dmg" class="btn btn-primary" rel="noopener">↓ 下载 v1.0.1（Apple Silicon · dmg）</a>
-      <div class="download-meta">
-        当前版本 <code>v1.0.1</code> · macOS 12+ · Apple Silicon<br>
-        <a href="https://github.com/AllenCHM/gouzi/releases/tag/v1.0.1" target="_blank" rel="noopener">查看 Release Notes</a>
-        · Intel / Windows / Linux 版尚在路上
+      <div class="download-card">
+        <h2>开始用 狗子</h2>
+        <p>免费、无账号、不联网。下载就能用。</p>
+        <a href="https://github.com/AllenCHM/gouzi/releases/download/v1.0.1/gouzi_1.0.1_aarch64.dmg" class="btn btn-primary" rel="noopener">↓ 下载 v1.0.1（Apple Silicon · dmg）</a>
+        <div class="download-meta">
+          当前版本 <code>v1.0.1</code> · macOS 12+ · Apple Silicon<br>
+          <a href="https://github.com/AllenCHM/gouzi/releases/tag/v1.0.1" target="_blank" rel="noopener">查看 Release Notes</a>
+          · Intel / Windows / Linux 版尚在路上
+        </div>
       </div>
     </div>
-    <aside class="badge badge--download" aria-hidden="true">
-      <svg class="badge__rim" viewBox="0 0 280 280">
-        <defs>
-          <path id="badge-rim-download" d="M 22 140 a 118 118 0 1 1 236 0 a 118 118 0 1 1 -236 0"/>
-        </defs>
-        <circle cx="140" cy="140" r="138" fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="3 5" opacity="0.35"/>
-        <circle cx="140" cy="140" r="98" fill="none" stroke="currentColor" stroke-width="0.8" stroke-dasharray="2 4" opacity="0.3"/>
-        <text class="badge__text"><textPath href="#badge-rim-download" startOffset="0">v1.0.1 · BUILT WITH CARE · 用心打磨 · v1.0.1 · BUILT WITH CARE · 用心打磨 · </textPath></text>
-      </svg>
-      <img src="assets/logo-mark.svg" alt="" class="badge__logo">
-      <svg class="badge__star badge__star--1" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-      <svg class="badge__star badge__star--2" viewBox="0 0 24 24"><path d="M12 1.5 L13.5 10.5 L22.5 12 L13.5 13.5 L12 22.5 L10.5 13.5 L1.5 12 L10.5 10.5 Z" fill="currentColor"/></svg>
-    </aside>
   </div>
 </section>
 
