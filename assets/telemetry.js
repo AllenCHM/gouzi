@@ -234,23 +234,10 @@
     }
   }
 
-  function send(events, useBeacon) {
-    var body = JSON.stringify(events)
-    if (useBeacon && navigator.sendBeacon) {
-      // sendBeacon 可靠性最高（页面 unload 也能发），但必须用 simple Content-Type 才不触发 preflight。
-      // 用 Blob({type: 'text/plain'}) 让 server 端按 body 字节解析（goubi agent 兼容 raw JSON body）
-      try {
-        var blob = new Blob([body], { type: 'text/plain;charset=UTF-8' })
-        var ok = navigator.sendBeacon(
-          ENDPOINT + '?token=' + encodeURIComponent(TOKEN)
-                  + '&project=' + encodeURIComponent(PROJECT)
-                  + '&device=' + encodeURIComponent(deviceId),
-          blob,
-        )
-        if (ok) return
-      } catch (e) {}
-    }
-    // 默认走 fetch（需要 agent 端 CORS 允许 https://gouzi.xiangyagu.com origin）
+  // goubi-agent 只接受 header 形式的 token/project/device（query 形式 401，见 integration.md §4.1）。
+  // sendBeacon 不支持 custom header，所以统一走 fetch + keepalive: true ——
+  // 浏览器允许 fetch 在 page unload 后继续发出（≤ 64KB body），效果等同 sendBeacon 但能塞 header。
+  function send(events) {
     try {
       fetch(ENDPOINT, {
         method: 'POST',
@@ -260,27 +247,25 @@
           'X-Project': PROJECT,
           'X-Device': deviceId,
         },
-        body: body,
-        // mode: 'cors' 默认。若 agent 没 CORS，浏览器会拦截但事件已发出
-        keepalive: true,  // 页面卸载场景（fetch 等价 sendBeacon）
+        body: JSON.stringify(events),
+        keepalive: true,
       }).catch(function () {})
     } catch (e) {}
   }
 
-  function flush(useBeacon) {
+  function flush() {
     if (queue.length === 0) return
     var batch = queue.splice(0, 200)
-    send(batch, !!useBeacon)
+    send(batch)
   }
 
   function track(name, props) {
     try {
       queue.push(buildEvent(name, props || {}))
       // 简单策略：每条事件入队后就尽快 flush（官网事件密度低，不做 batch 也够用）
-      // unload 时统一 sendBeacon
       if (!sending) {
         sending = true
-        setTimeout(function () { sending = false; flush(false) }, 200)
+        setTimeout(function () { sending = false; flush() }, 200)
       }
     } catch (e) {}
   }
@@ -410,8 +395,8 @@
       duration_s: dur,
       max_scroll_depth: maxScrollPct,
     })
-    // sendBeacon 兜底，确保页面卸载时事件能送到
-    flush(true)
+    // fetch + keepalive 在 page unload 后仍能发出（≤ 64KB body），不再需要 sendBeacon 兜底
+    flush()
   }
 
   // ============ 启动 ============
