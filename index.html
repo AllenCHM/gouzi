@@ -827,7 +827,17 @@ section{padding:80px 0}
 .download-card::after{top:-10px;right:30px;transform:rotate(3deg)}
 .download-card h2{font-size:32px;margin-bottom:12px}
 .download-card p{font-size:16px;color:var(--ink-soft);margin-bottom:28px}
+.download-buttons{
+  display:flex;flex-wrap:wrap;gap:12px;justify-content:center;
+  align-items:center;
+}
 .download-card .btn-primary{font-size:18px;padding:16px 32px}
+.download-card .btn-ghost{font-size:18px;padding:14.5px 30.5px}
+@media(max-width:520px){
+  .download-buttons{flex-direction:column;align-items:stretch}
+  .download-card .btn-primary,
+  .download-card .btn-ghost{justify-content:center}
+}
 .download-meta{
   margin-top:18px;font-size:13px;color:var(--ink-faint);
 }
