@@ -1,25 +1,26 @@
 {
   "schema": 1,
-  "generated_at": "2026-05-10T08:18:30.813Z",
+  "generated_at": "2026-05-10T10:59:56.420Z",
   "app": {
     "version": "1.2.1",
-    "pub_date": "2026-05-10T08:18:30.814Z",
+    "pub_date": "2026-05-10T10:59:56.424Z",
     "notes": "> 让正确的行为变得极其容易。\n\n🌐 **官网**: <https://gouzi.xiangyagu.com>\n\n---\n\n## 📥 下载\n\n| 平台 | 架构 | 文件 |\n|---|---|---|\n| macOS | Apple Silicon (M 系列) | `Gouzi_1.2.1_aarch64.dmg` |\n| Windows | x64 | `Gouzi_1.2.1_x64-setup.exe` |\n\n> Intel Mac / Linux 版正在路上，敬请期待。\n\n---\n\n## ✨ 新功能\n\n- **APP 升级提示**：启动后异步拉取官网 `latest.json`，发现新版本时在侧栏挂一个轻量蓝色横幅「新版本 vX.Y.Z 可用」+ 「查看更新 →」。点击通过 Rust 端 `open_external_url` 命令调系统默认浏览器跳到 GitCode release 页（不会替换 webview 内容）。带 24h 本地缓存，用户可点叉号「本版本不再提醒」。\n- **CLI 升级提示**：`rzb` 命令执行完后，若发现新版本会在 stderr 打印一行温和提示（含下载链接 + 关闭方法）。**`--json` 模式下完全静默**——不会污染 JSON 输出，跑脚本调用安全。`RZB_NO_UPDATE_CHECK=1` 一键关闭升级检查。\n- **自动 manifest 发布管线**：每次 release-windows workflow 跑完会自动生成 `latest.json` 推到 `gouzi-site`（gitcode 默认分支），由腾讯 EdgeOne Pages 几十秒内部署到 `https://gouzi.xiangyagu.com/latest.json`。下载 URL 全部指向 GitCode releases，国内访问友好。\n\n## 🔧 工程\n\n- **新增 Rust 命令 `open_external_url`**：用系统命令（macOS `open` / Windows `start` / Linux `xdg-open`）打开外部链接，避免 Tauri webview 直接 `window.open(https://...)` 替换 APP 内容；只放行 `https://` URL，挡住误调到 `file://` / `shell://` 的攻击面。\n- **新增 `okr-app/scripts/build-latest-json.mjs`**：从 `package.json` + `RELEASE_NOTES.md` 读数据生成 manifest，CI 和本地都能调，输出 `dist/latest.json` 或 `--out=` 指定路径。",
     "notes_url": "https://gouzi.xiangyagu.com/changelog",
     "platforms": {
       "darwin-aarch64": {
-        "url": "https://gitcode.com/AllenCheng/gouzi/releases/tag/v1.2.1",
+        "url": "https://gitee.com/AllenCHM/gouzi/releases/download/v1.2.1/Gouzi_1.2.1_aarch64.dmg",
         "asset": "Gouzi_1.2.1_aarch64.dmg"
       },
       "windows-x86_64": {
-        "url": "https://gitcode.com/AllenCheng/gouzi/releases/tag/v1.2.1",
+        "url": "https://gitee.com/AllenCHM/gouzi/releases/download/v1.2.1/Gouzi_1.2.1_x64-setup.exe",
         "asset": "Gouzi_1.2.1_x64-setup.exe"
       }
-    }
+    },
+    "release_page": "https://gitee.com/AllenCHM/gouzi/releases/tag/v1.2.1"
   },
   "mirrors": {
-    "github": "https://github.com/AllenCHM/gouzi/releases/tag/v1.2.1",
     "gitee": "https://gitee.com/AllenCHM/gouzi/releases/tag/v1.2.1",
+    "github": "https://github.com/AllenCHM/gouzi/releases/tag/v1.2.1",
     "gitcode": "https://gitcode.com/AllenCheng/gouzi/releases/tag/v1.2.1"
   }
 }
