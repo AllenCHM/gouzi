@@ -6,7 +6,10 @@
 这个仓库放着「狗子」的**对外站点**和**版本分发**。
 
 - 官网：<https://gouzi.xiangyagu.com/>
-- 最新版下载：[Releases](https://github.com/AllenCHM/gouzi/releases/latest)
+- 最新版下载（任选其一，国内优先 GitCode）：
+  - 🌌 [GitCode](https://gitcode.com/AllenCheng/gouzi/releases/latest)
+  - 🐙 [GitHub](https://github.com/AllenCHM/gouzi/releases/latest)
+  - 🦊 [Gitee](https://gitee.com/AllenCHM/gouzi/releases/latest)
 - 邮件联系：<chinaxnccm@gmail.com>
 
 ---
@@ -47,14 +50,26 @@
 
 ## 安装
 
+国内访问推荐 **GitCode** 镜像；GitHub / Gitee 同步发版，按你顺手的来：
+
+- 🌌 [GitCode](https://gitcode.com/AllenCheng/gouzi/releases/latest)
+- 🐙 [GitHub](https://github.com/AllenCHM/gouzi/releases/latest)
+- 🦊 [Gitee](https://gitee.com/AllenCHM/gouzi/releases/latest)
+
 ### macOS（Apple Silicon）
 
-1. 到 [Releases](https://github.com/AllenCHM/gouzi/releases/latest) 下载最新的 `.dmg`
+1. 下载 `Gouzi_X.Y.Z_aarch64.dmg`
 2. 拖入 Applications
 3. 首次启动时引导你设置一个密码（可跳过）
 4. 设了密码 = 数据本地加密，离开你的 mac 就读不到
 
-### Intel / Windows / Linux
+### Windows（x64）
+
+1. 下载 `Gouzi_X.Y.Z_x64-setup.exe`（NSIS 安装包，自 v1.2.0 起官方支持）
+2. 双击运行，按引导一路下一步
+3. 安装完成后从开始菜单启动
+
+### Intel Mac / Linux
 
 正在路上。本仓库 Issue 区欢迎反馈优先级。
 
@@ -64,13 +79,25 @@
 
 ```
 .
-├── index.html        # 官网首页（GitHub Pages 直接部署）
+├── index.html        # 官网首页（部署到 gouzi.xiangyagu.com）
+├── latest.json       # APP / CLI 升级 manifest，发版 workflow 自动写入
 ├── assets/           # 图片、Logo、二维码
-├── .nojekyll         # 告诉 Pages 不走 Jekyll
+├── CNAME             # 自定义域名
+├── .nojekyll         # 兼容 GitHub Pages（EdgeOne Pages 不需要，留空不影响）
 └── README.md         # 你正在看的文件
 ```
 
-代码源（APP 本体）在另外的私有仓库；这个仓库只承担「下载入口 + 介绍页」两件事。
+代码源（APP 本体）在另外的私有仓库；这个仓库承担「下载入口 + 介绍页 + 升级 manifest」三件事。
+
+### 关于 `latest.json`
+
+从 v1.2.1 起，APP 启动 / `rzb` CLI 命令执行后会异步拉取
+<https://gouzi.xiangyagu.com/latest.json>，跟本地版本号比较；
+发现新版本时会在 APP 侧栏挂提示横幅或在 CLI stderr 打印一行温和提示，
+点击/复制链接跳到 GitCode release 页下载。
+
+manifest 由主仓 `.gitea/workflows/release-windows.yml` 在三家 release 资产
+都已就位之后自动生成 + push 进本仓 `main`，由腾讯 EdgeOne Pages 自动部署。
 
 ---
 
