@@ -3,6 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script>
+/* 移动端自动跳转 — 必须在渲染前同步执行，避免 PC 版闪屏 */
+(function(){
+  try {
+    var qs = new URLSearchParams(location.search);
+    var force = qs.get('force');           // ?force=pc 或 ?force=m
+    var ls; try { ls = window.localStorage; } catch(e){}
+    var rest = (function(){               // 把 force 参数剔掉后剩下的 query
+      var q = new URLSearchParams(location.search); q.delete('force');
+      var s = q.toString(); return s ? ('?' + s) : '';
+    })();
+
+    if (force === 'pc' || force === 'm') {
+      if (ls) ls.setItem('gouzi-site:device', force);
+      if (force === 'pc') return;          // 留在当前 PC 版
+      location.replace('m.html' + rest + location.hash);
+      return;
+    }
+
+    var saved = ls && ls.getItem('gouzi-site:device');
+    if (saved === 'pc') return;
+    if (saved === 'm') { location.replace('m.html' + location.search + location.hash); return; }
+
+    var ua = navigator.userAgent || '';
+    var isIPad = /iPad/.test(ua) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    var isMobileUA = /Mobi|Android|iPhone|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua);
+    var narrow = window.innerWidth && window.innerWidth < 768;
+    if (!isIPad && (isMobileUA || narrow)) {
+      location.replace('m.html' + location.search + location.hash);
+    }
+  } catch(e) { /* 静默失败，绝不挡页面渲染 */ }
+})();
+</script>
+<link rel="alternate" media="only screen and (max-width: 720px)" href="m.html">
 <title>狗子 · 让正确的行为变得极其容易</title>
 <meta name="description" content="狗子,最早叫"人生清单"。一个 AI Native 的桌面应用 — 你跟 AI 说一句"刚花了 35 块吃午饭",它就帮你记好了。数据本地加密,Mac 原生。">
 <meta property="og:title" content="狗子 · 一个 AI Native 的人生管理桌面应用">
@@ -1010,7 +1044,7 @@ footer{
         <a href="#features" class="btn btn-ghost" data-cta="explore" data-cta-section="hero">看看它能做什么</a>
       </div>
       <div class="hero-meta">
-        <span><span class="dot"></span>v1.0.1 已发布</span>
+        <span><span class="dot"></span>v1.2.1 已发布</span>
         <span><span class="dot" style="background:var(--blue)"></span>跟 AI 说话就能用</span>
         <span><span class="dot" style="background:var(--ink-faint)"></span>Mac 原生</span>
         <span><span class="dot" style="background:var(--orange)"></span>数据只在你电脑里</span>
